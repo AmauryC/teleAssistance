@@ -5,7 +5,7 @@
 -->
 <!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.6.0//EN"
   "http://google-web-toolkit.googlecode.com/svn/tags/2.6.0/distro-source/core/src/gwt-module.dtd">
-<module rename-to='soagamble2'>
+<module rename-to='teleAssistance'>
   <!-- Inherit the core Web Toolkit stuff.                        -->
   <inherits name='com.google.gwt.user.User'/>
 
@@ -21,7 +21,7 @@
  
 
   <!-- Specify the app entry point class.                      	   -->
-  <entry-point class='com.webapp.client.SOAGamble2'/>
+  <entry-point class='com.webapp.client.TeleAssistance'/>
 
   <!-- Specify the paths for translatable code                    -->
   <source path='client'/>

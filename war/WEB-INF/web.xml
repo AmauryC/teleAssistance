@@ -13,12 +13,12 @@
   
   <servlet-mapping>
     <servlet-name>workflowServlet</servlet-name>
-    <url-pattern>/soagamble2/workflow</url-pattern>
+    <url-pattern>/teleAssistance/workflow</url-pattern>
   </servlet-mapping>
 
   <!-- Default page to serve -->
   <welcome-file-list>
-    <welcome-file>SOAGamble2.html</welcome-file>
+    <welcome-file>tele_assistance.html</welcome-file>
   </welcome-file-list>
 
   
@@ -29,7 +29,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>EventService</servlet-name>
-        <url-pattern>/soagamble2/gwteventservice</url-pattern>
+        <url-pattern>/teleAssistance/gwteventservice</url-pattern>
     </servlet-mapping>
     
     <servlet>
@@ -38,6 +38,6 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>ServerMessageGeneratorService</servlet-name>
-        <url-pattern>/soagamble2/ServerMessageGeneratorService</url-pattern>
+        <url-pattern>/teleAssistance/ServerMessageGeneratorService</url-pattern>
     </servlet-mapping>
 </web-app>

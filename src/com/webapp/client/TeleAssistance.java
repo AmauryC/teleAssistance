@@ -15,7 +15,7 @@ import de.novanic.eventservice.client.event.listener.RemoteEventListener;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class SOAGamble2 implements EntryPoint {
+public class TeleAssistance implements EntryPoint {
 	/**
 	 * The message displayed to the user when the server cannot be reached or
 	 * returns an error.
@@ -47,8 +47,8 @@ public class SOAGamble2 implements EntryPoint {
 		$wnd.app.printProfit(jsArrayString);
 	}-*/;
 
-	public static native void displayProfit(double profit)/*-{
-		$wnd.app.displayProfit(profit);
+	public static native void displayProfit(String s)/*-{
+		$wnd.app.displayProfit(s);
 	}-*/;
 
 	public static native void computeAssets(double paid)/*-{
@@ -73,7 +73,7 @@ public class SOAGamble2 implements EntryPoint {
 	public void onModuleLoad() {
 		exportJSFunction();
 
-		RemoteEventService theRemoteEventService = RemoteEventServiceFactory
+		/*RemoteEventService theRemoteEventService = RemoteEventServiceFactory
 				.getInstance().getRemoteEventService();
 		// add a listener to the SERVER_MESSAGE_DOMAIN
 		theRemoteEventService.addListener(UpdateUIEvent.SERVER_MESSAGE_DOMAIN,
@@ -110,7 +110,7 @@ public class SOAGamble2 implements EntryPoint {
 							highlight(tab[tab.length - 1]);
 						}
 					}
-				});
+				});*/
 
 		workflowService.initialize(callback);
 	}
@@ -124,12 +124,19 @@ public class SOAGamble2 implements EntryPoint {
 	}
 
 	public static native void exportJSFunction()/*-{
-		$wnd.launchWorkflow = @com.webapp.client.SOAGamble2::launchWorkflow(*);
+		$wnd.launchWorkflow = @com.webapp.client.TeleAssistance::launchWorkflow(*);
+		$wnd.sendTask = @com.webapp.client.TeleAssistance::sendTask(*);
 	}-*/;
 
-	public static void launchWorkflow(int waitingTime, boolean favorite, double availableMoney) {
+	public static void sendTask(int choice){
+		workflowService.sendTask(choice, pickTaskCallback);
+	}
+	public static void launchWorkflow(int waitingTime) {
+		System.out.println("CONAN 1");
 		workflowInExecution();
-		workflowService.createClient(waitingTime, favorite, availableMoney, clientCallback);
+		System.out.println("CONAN 2");
+		workflowService.createClient(waitingTime, clientCallback);
+		System.out.println("CONAN 3");
 	}
 
 	static AsyncCallback<String> callback = new AsyncCallback<String>() {
@@ -142,23 +149,40 @@ public class SOAGamble2 implements EntryPoint {
 
 		@Override
 		public void onSuccess(String result) {
-
+			
 		}
 
 	};
 
-	static AsyncCallback<Double> clientCallback = new AsyncCallback<Double>() {
+	static AsyncCallback<Boolean> clientCallback = new AsyncCallback<Boolean>() {
 
 		@Override
 		public void onFailure(Throwable caught) {
-			displayProfit(-1.0);
-
+			//displayProfit(-1.0);
+			System.out.println("Failure :/");
 		}
 
 		@Override
-		public void onSuccess(Double result) {
-			displayProfit(result);
+		public void onSuccess(Boolean result) {
+			System.out.println("SUCCESS !");
+			displayProfit("true");
 			workflowFinished();
+			System.out.println("Finished");
+		}
+
+	};
+	
+	static AsyncCallback<Boolean> pickTaskCallback = new AsyncCallback<Boolean>() {
+
+		@Override
+		public void onFailure(Throwable caught) {
+			//displayProfit(-1.0);
+			System.out.println("Failure :/");
+		}
+
+		@Override
+		public void onSuccess(Boolean result) {
+			System.out.println("task picked and sent to workflow engine");
 		}
 
 	};

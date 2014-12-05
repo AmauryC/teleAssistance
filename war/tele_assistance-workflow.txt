@@ -1,0 +1,42 @@
+START [patientId]
+	
+	//Constants for the button-pressed event
+	stop = -1
+	analyze = 0
+	alert = 1
+	
+	//Constants to process medical analysis
+	changeDrug=0
+	changeDoses=1
+	sendAlarm=2
+		
+	task=-2
+	
+	WHILE (task != stop){
+		task = this.pickTask()
+		
+		IF (task == analyze ) {
+			data = this.getVitalParameters()
+			analysisResult = MedicalAnalysisService.analyzeData(data)
+			analysis = this.getDecision(analysisResult)
+			
+			IF (analysis == changeDrug) {
+				DrugService.changeDrug(analysisResult, patientId)
+			}
+			
+			IF (analysis == changeDoses) {
+				DrugService.changeDoses(analysisResult, patientId)
+			}
+			
+			IF (analysis == sendAlarm) {
+				AlarmService.triggerAlarm()
+			}
+		}
+		
+		IF (task == alert) {
+			AlarmService.triggerAlarm()
+		}
+		
+	}
+	
+RETURN true

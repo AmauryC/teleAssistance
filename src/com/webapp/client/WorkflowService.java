@@ -1,5 +1,6 @@
 package com.webapp.client;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
@@ -9,5 +10,6 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 @RemoteServiceRelativePath("workflow")
 public interface WorkflowService extends RemoteService {
 	String initialize();
-	Double createClient(int waitingTime, boolean favorite, double availableMoney);
+	boolean createClient(int waitingTime);
+	boolean sendTask(int choice);
 }

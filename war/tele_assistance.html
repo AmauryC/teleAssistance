@@ -3,8 +3,8 @@
 <head>
     <head>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-        <title>Web Application Starter Project</title>
-        <script type="text/javascript" src="soagamble2/soagamble2.nocache.js"></script>
+        <title>Tele Assistance</title>
+        <script type="text/javascript" src="teleAssistance/teleAssistance.nocache.js"></script>
         
         <script type="text/javascript" src="lib/snap.svg-min.js"></script>
         <script type="text/javascript" src="js/Editor.js"></script>
@@ -40,59 +40,13 @@
 		<div id="homepage"></div>
 
         <div id="app">
-            <h1>Gambling SOA system</h1>
-            <p>
-                <span id="assets">Available : 1000.00 €</span><br/>
-                Click here to <a href="javascript:app.initiateSequence()">launch the automatic bet sequence</a>
-                <select id="runs" style="margin-left:15px">
-			      <option value="1" selected>1 run</option>
-			      <option value="3">3 runs</option>
-			      <option value="5">5 runs</option>
-			      <option value="10">10 runs</option>
-			      <option value="15">15 runs</option>
-			      <option value="25">25 runs</option>
-			      <option value="50">50 runs</option>
-			      <option value="100">100 runs</option>
-			    </select>
-			    <span id="remaining" style="margin-left:15px"></span>
-            </p>
-
-			<div style="float:left">
-	            <table id="eventTable">
-	                <tr>
-	                    <th rowspan="2" class="event-col">
-	                        Event
-	                    </th>
-	                    <th colspan="3" class="odds-col">
-	                        Odds
-	                    </th>
-	                    <th colspan="2" rowspan="2" class="bet-col">
-	                        Bet
-	                    </th>
-	                    <th colspan="2" rowspan=2 class="result-col">
-	                        Result
-	                    </th>
-	                </tr>
-	                <tr>
-	                	<th>H</th>
-	                	<th>D</th>
-	                	<th>A</th>
-	                </tr>
-	            </table>
-	        </div>
-	        	
-			<div style="width: 600px; height: 280px;float:left">
-				<div style="font-weight:bold; text-align:center">Betting Statistic</div>
-	            <div id="chart_div"></div>
-	        </div>
-            <br style="clear:both" />
-            <input id="useFavoriteCB" type="checkbox" name="favorite" value="favorite" style=""> Use sport provider favorite </input>
-            
-            <br style="clear:both" />
-            
-            <div id="paid_money" style="margin-top:20px"></div>
-            <div id="profits"></div>
-            <div id="winnings"></div>
+            <h1>Tele Assistance Simulation</h1>
+	            Click here to <a href="javascript:app.pickTask(0);">analyze your body metrics</a><br/>
+	            Click here to <a href="javascript:app.pickTask(1);">call the emergency services</a><br/>
+	            Click here to <a href="javascript:app.pickTask(-1);">stop the workflow</a><br/>
+			<p	id="workflow_result">
+			
+			</p>
         </div>
         
         <div id="parser">

@@ -7,5 +7,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  */
 public interface WorkflowServiceAsync {
 	void initialize(AsyncCallback<String> callback);
-	void createClient(int waitingTime, boolean favorite, double availableMoney, AsyncCallback<Double> callback);
+	void createClient(int waitingTime, AsyncCallback<Boolean> callback);
+	void sendTask(int choice, AsyncCallback<Boolean> callback);
 }

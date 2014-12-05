@@ -1,2 +1,0 @@
-serviceClass: com.webapp.client.WorkflowService
-path: 4839193440CDD0E771F7400A4076BCB4.gwt.rpc

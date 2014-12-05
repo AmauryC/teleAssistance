@@ -1,40 +1,27 @@
 package com.soa.client;
 
-import com.soa.object.Bet;
-import com.soa.object.Odds;
-
 import service.composite.CompositeServiceClient;
 
 public class Client extends CompositeServiceClient {
 
-	private static int userId = 0;
+	private static int patientId = 5;
 
 	public Client() {
-		super("se.lnu.course4dv109");
+		super("se.lnu.course4dv110");
 	}
-	public double start(boolean favorite, double availableMoney) {	
-		userId++;
+
+	public boolean start() {	
 
 		//qosRequirements.add("BestPerformance");
 		//List<String> qosRequirements = new ArrayList<String>(); //client.getQosRequirementNames();
 		String qosRequirement;
+		qosRequirement = "Performance";
 		
-		
-		if(favorite){
-			qosRequirement = "UseProviderFavorite";
-		}
-		else{
-			qosRequirement = "BestPerformance";
-		}
+		boolean stopped = false;
 
-		Bet[] bets = new Bet[8];
-		Odds[] odds = new Odds[8];
-		double[] profits = new double[8];
-		double result = 0.0;
-
-		result = (double)this.invokeCompositeService(qosRequirement, "3333-3333", userId, odds, bets, profits, result, availableMoney);
-
+		stopped = (boolean)this.invokeCompositeService(qosRequirement, patientId);
+		System.out.println("KABLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA : "+stopped);
 		//Here we return because we only want to run once for the moment. Remove the return and it will run for each QoS requirement
-		return result;
+		return stopped;
 	}
 }
