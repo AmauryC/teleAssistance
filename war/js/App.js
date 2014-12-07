@@ -53,22 +53,22 @@ App.prototype.start = function() {
 	this.drawChart();
 	
 	//Toogle 
-	var app = document.getElementByd("startApp");
-	app.addEventListener("click", displayApp, false); 
+	var app = document.getElementById("startApp");
+	app.addEventListener("click", this.displayApp, false); 
 	
-	var failure = document.getElementByd("startFailure");
-	failure.addEventListener("click", displayFailure, false); 
+	var failure = document.getElementById("startFailure");
+	failure.addEventListener("click", this.displayFailure, false); 
 	
 };
 
 App.prototype.displayApp = function() {
-	document.getElementById("startFailure").style.display="none";
-	document.getElementByd("startApp").style.display="block";
+	document.getElementById("failure").style.display="none";
+	document.getElementById("app").style.display="block";
 };
 
 App.prototype.displayFailure = function() {
-	document.getElementById("startFailure").style.display="block";
-	document.getElementByd("startApp").style.display="none";
+	document.getElementById("failure").style.display="block";
+	document.getElementById("app").style.display="none";
 };
 
 App.prototype.drawChart = function() {

@@ -19,11 +19,16 @@
     <body>
     	<nav id="navpage">
     		<a id="startApp">Application</a>
+    		<a id="startFailure">Failure</a>
     	</nav>
 
         <div id="app">
             <h1>Tele Assistance Simulation</h1>
             	
+            	 <div class="medical_analysis">
+           		<div id="bpm-chart">
+           		</div>
+           	</div>
             <span class="device">
 	            <span class="checkup_button"><a href="javascript:app.pickTask(0);">CHECK UP</a></span>
 	            <span class="emergency_button"><a href="javascript:app.pickTask(1);">EMERGENCY</a></span><br/>
@@ -34,10 +39,7 @@
             
             </div>
             
-           <div class="medical_analysis">
-           		<div id="bpm-chart">
-           		</div>
-           	</div>
+          
            	
            	<div id="alarm" class="alarm">
            		EMERGENCY
