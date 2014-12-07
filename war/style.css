@@ -76,6 +76,7 @@ a {
 .device {
 	margin-left:20px;
 	padding:10px;
+	margin-top:0px;
 	border: 1px solid black;
 	display: inline-block;
 }
@@ -118,6 +119,11 @@ a {
 	float:right;
 }
 
+.device_title{
+	margin-left:15px;
+	padding-bottom:2px;
+	margin-bottom:2px;
+}
 .alarm{
 	margin-left:30px;
 	bottom:30px;

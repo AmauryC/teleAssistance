@@ -1,57 +1,60 @@
 <!doctype html>
 <html>
 <head>
-    <head>
-        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-        <title>Tele Assistance</title>
-        <script type="text/javascript" src="teleAssistance/teleAssistance.nocache.js"></script>
-        
-        <script type="text/javascript" src="js/App.js"></script>
-        <script type="text/javascript" src="js/diagram.js"></script>
-	    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-	    <script type="text/javascript">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>Tele Assistance</title>
+<script type="text/javascript"
+	src="teleAssistance/teleAssistance.nocache.js"></script>
+
+<script type="text/javascript" src="js/App.js"></script>
+<script type="text/javascript" src="js/diagram.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
         	google.load("visualization", "1", {packages:["corechart"]});
         </script>
-        
-        <link rel="stylesheet" href="style.css" />
-    </head>
-    
-    <body>
-    	<nav id="navpage">
-    		<a id="startApp">Application</a>
-    		<a id="startFailure">Failure</a>
-    	</nav>
 
-        <div id="app">
-            <h1>Tele Assistance Simulation</h1>
-            	
-            	 <div class="medical_analysis">
-           		<div id="bpm-chart">
-           		</div>
-           	</div>
-            <span class="device">
-	            <span class="checkup_button"><a href="javascript:app.pickTask(0);">CHECK UP</a></span>
-	            <span class="emergency_button"><a href="javascript:app.pickTask(1);">EMERGENCY</a></span><br/>
-	            <span class="stop_button"><a href="javascript:app.pickTask(-1);">STOP</a></span><br/>
-			</span>
+<link rel="stylesheet" href="style.css" />
+</head>
 
-            <div id="drugDiv">
-            
-            </div>
-            
-          
-           	
-           	<div id="alarm" class="alarm">
-           		EMERGENCY
-           	</div>
-        </div>
+<body>
+	<nav id="navpage">
+		<a id="startApp">Application</a> <a id="startFailure">Failure</a>
+	</nav>
 
-        <div id="failure">
-           	<div class="failure_chart">
-				<div id="alarm-chart"></div>
-				<div id="lab-chart"></div>
+	<div id="app">
+		<h1>Tele Assistance Simulation</h1>
+
+		<div class="medical_analysis">
+			<p><b>Medical Analysis Service</b></p>
+			<div>
+				<div id="bpm-chart"></div>
 			</div>
-        </div>
-    </body>
+		</div>
+
+		<p class="device_title">
+			<b>Device</b>
+		</p>
+		<span class="device"> <span class="checkup_button"><a
+				href="javascript:app.pickTask(0);">CHECK UP</a></span> <span
+			class="emergency_button"><a href="javascript:app.pickTask(1);">EMERGENCY</a></span><br />
+			<span class="stop_button"><a
+				href="javascript:app.pickTask(-1);">STOP</a></span><br />
+		</span>
+
+		<div id="drugDiv"></div>
+
+
+
+		<div id="alarm" class="alarm">EMERGENCY</div>
+	</div>
+
+	<div id="failure">
+		<div class="failure_chart">
+			<div id="alarm-chart"></div>
+			<div id="lab-chart"></div>
+		</div>
+	</div>
+</body>
 </html>
 
