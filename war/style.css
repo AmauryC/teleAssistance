@@ -80,7 +80,9 @@ a {
 	border: 1px solid black;
 	display: inline-block;
 }
-
+.border-box{
+	border:1px solid black;
+}
 .checkup_button a {
 	padding:5px;
 	border: 1px solid #ccc;
@@ -107,6 +109,7 @@ a {
 }
 
 .medical_analysis{
+	margin-right:10px;
 	float:right;
 	width:300px;
 }
