@@ -26,6 +26,9 @@ public class Alarm1Service extends AlarmService {
 		customProperties.put("Reliability", 0.03);
 		customProperties.put("Performance", 1.1);
 		customProperties.put("Cost", 4.1);
+		
+		alarmService.getServiceDescription().setResponseTime(2);
+		
 		alarmService.startService();
 		alarmService.register();
 

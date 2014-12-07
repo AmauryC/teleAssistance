@@ -58,6 +58,9 @@ public class TeleAssistanceCompositeService extends CompositeService {
 			synchronized(this){
 				this.wait();
 			}
+			
+			if(this.choice == -2)
+				return this.pickTask();
 
 			System.out.println("User chose choice n°"+choice);
 			return this.choice;
