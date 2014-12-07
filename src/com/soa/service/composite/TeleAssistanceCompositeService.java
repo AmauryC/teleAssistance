@@ -4,7 +4,9 @@ import com.soa.object.AnalysisResult;
 import com.soa.object.Decision;
 import com.soa.object.HealthReport;
 import com.soa.object.Patient;
+import com.soa.qos.AnalysisStrategyQoS;
 import com.soa.qos.CostQoS;
+import com.soa.qos.DirectStrategyQoS;
 import com.soa.qos.PerformanceQoS;
 import com.soa.qos.ReliabilityQoS;
 import com.soa.service.atomic.graphical.GraphicalTeleAssistanceCompositeService;
@@ -37,6 +39,8 @@ public class TeleAssistanceCompositeService extends CompositeService {
 		this.addQosRequirement("Performance", new PerformanceQoS());
 		this.addQosRequirement("Reliability", new ReliabilityQoS());
 		this.addQosRequirement("Cost", new CostQoS());
+		this.addQosRequirement("DirectStrategy", new DirectStrategyQoS());
+		this.addQosRequirement("AnalysisStrategy", new AnalysisStrategyQoS());
 		this.startService();
 		this.register();
 	}

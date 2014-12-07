@@ -1,10 +1,9 @@
 package com.webapp.client.event;
 
 public class State {
-	public static final int GET_SPORT_EVENTS = 0;
-	public static final int REQUEST_ODDS = 1;
-	public static final int PLACE_BET = 2;
-	public static final int REQUEST_PROFIT = 3;
-	public static final int MAKE_PAYMENT = 4;
-	public static final int LOCAL_OPERATION = 5;
+	public static final int WORKFLOW_STARTED = 100;
+	public static final int WORKFLOW_ENDED = 101;
+	public static final int SERVICE_INVOKED = 102;
+	public static final int SERVICE_SUCCESSFUL = 103;
+	public static final int SERVICE_TIMEOUT = 104;
 }

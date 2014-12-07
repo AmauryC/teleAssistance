@@ -6,21 +6,7 @@
         <title>Tele Assistance</title>
         <script type="text/javascript" src="teleAssistance/teleAssistance.nocache.js"></script>
         
-        <script type="text/javascript" src="lib/snap.svg-min.js"></script>
-        <script type="text/javascript" src="js/Editor.js"></script>
-        <script type="text/javascript" src="js/Parser.js"></script>
         <script type="text/javascript" src="js/App.js"></script>
-        <script type="text/javascript" src="js/Element.js"></script>
-        <script type="text/javascript" src="js/Arrow.js"></script>
-        <script type="text/javascript" src="js/Assignment.js"></script>
-        <script type="text/javascript" src="js/Entity.js"></script>
-        <script type="text/javascript" src="js/ServiceCall.js"></script>
-        <script type="text/javascript" src="js/CompositeCode.js"></script>
-        <script type="text/javascript" src="js/ConditionnalIf.js"></script>
-        <script type="text/javascript" src="js/ConditionnalElse.js"></script>
-        <script type="text/javascript" src="js/ConditionnalEndIf.js"></script>
-        <script type="text/javascript" src="js/ForLoop.js"></script>
-        <script type="text/javascript" src="js/EndFor.js"></script>
         <script type="text/javascript" src="js/diagram.js"></script>
 	    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 	    <script type="text/javascript">
@@ -32,12 +18,8 @@
     
     <body>
     	<nav id="navpage">
-    		<a id="startEditor">Editor</a>
-    		<a id="startParser">Parser</a>
     		<a id="startApp">Application</a>
     	</nav>
-
-		<div id="homepage"></div>
 
         <div id="app">
             <h1>Tele Assistance Simulation</h1>
@@ -47,45 +29,11 @@
 			<p	id="workflow_result">
 			
 			</p>
+			
+			<div id="alarm-chart"></div>
+			<div id="lab-chart"></div>
         </div>
         
-        <div id="parser">
-            <textarea id="workflowToParse" cols=90 rows=20></textarea>
-            <br/>
-            <button id="startParsing" class="mainbutton">Parse</button>
-        </div>
-
-        <div id="editor">
-            <nav id="toolbar">
-            	<label for="waitingTime">Time to wait between calls (in ms)</label>
-            	<input type="number" id="waitingTime" value="0"/>
-            	
-                <input type="text" id="entityName" /><button id="addEntity">Add entity</button>
-
-                <label class="labelinput" for="inputs">Input parameters (separated by commas) :</label>
-                <input type="text" id="inputs" />
-
-                <label class="labelinput" for="output">Output parameter :</label>
-                <input type="text" id="output" />
-
-                <label class="toggle-btn"><input type="radio" name="objectType" value="serviceCall" checked="checked"/>Service call</label>
-                <label class="toggle-btn"><input type="radio" name="objectType" value="compositeCode"/>Composite code</label>
-                <label class="toggle-btn"><input type="radio" name="objectType" value="if"/>If</label>
-                <label class="toggle-btn"><input type="radio" name="objectType" value="else"/>Else</label>
-                <label class="toggle-btn"><input type="radio" name="objectType" value="endIf"/>EndIf</label>
-                <label class="toggle-btn"><input type="radio" name="objectType" value="forLoop"/>ForLoop</label>
-                <label class="toggle-btn"><input type="radio" name="objectType" value="endFor"/>EndFor</label>
-
-                <button id="generate" class="mainbutton">Generate</button>
-                <button id="execute" class="mainbutton">Execute Workflow</button>
-
-                <textarea id="generated-workflow" rows=20></textarea>
-            </nav>
-            <div id="svgpanel">
-                <svg id="svg" height="2000px" width="1000px" viewBox="0 600 1200 1200"></svg>
-            </div>
-        </div>
-
     </body>
 </html>
 

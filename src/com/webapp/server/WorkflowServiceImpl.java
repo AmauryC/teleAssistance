@@ -1,6 +1,7 @@
 package com.webapp.server;
 
 
+import service.composite.CompositeService;
 import service.provider.AbstractService;
 
 import com.soa.client.Client;
@@ -14,6 +15,7 @@ import com.soa.service.atomic.MedicalAnalysis3Service;
 import com.soa.service.atomic.MedicalAnalysis4Service;
 import com.soa.service.atomic.MedicalAnalysis5Service;
 import com.soa.service.composite.TeleAssistanceCompositeService;
+import com.soa.service.composite.TeleAssistanceProbe;
 import com.soa.service.registry.TeleAssistanceServiceRegistry;
 import com.webapp.client.ServerMessageGeneratorService;
 import com.webapp.client.WorkflowService;
@@ -81,9 +83,9 @@ WorkflowService, ServerMessageGeneratorService {
 		}
 		if(services[10] == null) {
 			String[] path = {getServletContext().getRealPath("tele_assistance-workflow.txt")};
-			System.out.println("PATATE 6 ");
-			System.out.println(path);
-			services[10] = TeleAssistanceCompositeService.main(path, this); 
+			CompositeService ta = TeleAssistanceCompositeService.main(path, this);
+			ta.setProbe(new TeleAssistanceProbe(this));
+			services[10] = ta;
 		}
 
 
@@ -107,13 +109,6 @@ WorkflowService, ServerMessageGeneratorService {
 		Event theEvent = new UpdateUIEvent(object, state);
 		//add the event, so clients can receive it
 		addEvent(UpdateUIEvent.SERVER_MESSAGE_DOMAIN, theEvent);
-
-		try {
-			Thread.sleep(this.waitingTime);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	@Override

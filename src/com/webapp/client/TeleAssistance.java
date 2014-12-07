@@ -31,49 +31,33 @@ public class TeleAssistance implements EntryPoint {
 	private final static WorkflowServiceAsync workflowService = GWT
 			.create(WorkflowService.class);
 
-	public static native void printSportEventTable(JsArrayString events)/*-{
-		$wnd.app.printSportEventTable(events);
+	public static native void workflowStarted()/*-{
+		$wnd.app.workflowStarted();
 	}-*/;
-
-	public static native void printOdds(JsArrayString jsArrayString)/*-{
-		$wnd.app.printOdds(jsArrayString);
+	
+	public static native void workflowEnded()/*-{
+		$wnd.app.workflowEnded();
 	}-*/;
-
-	public static native void printBet(JsArrayString jsArrayString)/*-{
-		$wnd.app.printBet(jsArrayString);
+	
+	public static native void serviceInvoked(JsArrayString description)/*-{
+		$wnd.app.serviceInvoked(description);
 	}-*/;
-
-	public static native void printProfit(JsArrayString jsArrayString)/*-{
-		$wnd.app.printProfit(jsArrayString);
+	
+	public static native void serviceSuccessful(JsArrayString description)/*-{
+		$wnd.app.serviceSuccessful(description);
 	}-*/;
-
-	public static native void displayProfit(String s)/*-{
-		$wnd.app.displayProfit(s);
+	
+	public static native void serviceTimeout(JsArrayString description)/*-{
+		$wnd.app.serviceTimeout(description);
 	}-*/;
-
-	public static native void computeAssets(double paid)/*-{
-		$wnd.app.computeAssets(paid);
-	}-*/;
-
-	public static native void highlight(String call)/*-{
-		$wnd.parser.highlight(call);
-	}-*/;
-
-	public static native void workflowInExecution()/*-{
-		$wnd.parser.workflowInExecution();
-	}-*/;
-
-	public static native void workflowFinished()/*-{
-		$wnd.parser.workflowFinished();
-	}-*/;
-
+	
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
 		exportJSFunction();
 
-		/*RemoteEventService theRemoteEventService = RemoteEventServiceFactory
+		RemoteEventService theRemoteEventService = RemoteEventServiceFactory
 				.getInstance().getRemoteEventService();
 		// add a listener to the SERVER_MESSAGE_DOMAIN
 		theRemoteEventService.addListener(UpdateUIEvent.SERVER_MESSAGE_DOMAIN,
@@ -87,30 +71,25 @@ public class TeleAssistance implements EntryPoint {
 							JsArrayString jsArrayString = arrayToJsArray(tab);
 
 							switch (state) {
-							case State.GET_SPORT_EVENTS:
-								printSportEventTable(jsArrayString);
+							case State.WORKFLOW_STARTED:
+								workflowStarted();
 								break;
-							case State.REQUEST_ODDS:
-								printOdds(jsArrayString);
+							case State.WORKFLOW_ENDED:
+								workflowEnded();
 								break;
-							case State.PLACE_BET:
-								printBet(jsArrayString);
+							case State.SERVICE_INVOKED:
+								serviceInvoked(jsArrayString);
 								break;
-							case State.REQUEST_PROFIT:
-								printProfit(jsArrayString);
+							case State.SERVICE_SUCCESSFUL:
+								serviceSuccessful(jsArrayString);
 								break;
-							case State.MAKE_PAYMENT:
-								double paid = Double.parseDouble(tab[0]);
-								computeAssets(paid);
+							case State.SERVICE_TIMEOUT:
+								serviceTimeout(jsArrayString);
 								break;
-							case State.LOCAL_OPERATION:
-								System.out.println("### LOCAL " + tab[0]);
 							}
-
-							highlight(tab[tab.length - 1]);
 						}
 					}
-				});*/
+				});
 
 		workflowService.initialize(callback);
 	}
@@ -132,11 +111,7 @@ public class TeleAssistance implements EntryPoint {
 		workflowService.sendTask(choice, pickTaskCallback);
 	}
 	public static void launchWorkflow(int waitingTime) {
-		System.out.println("CONAN 1");
-		workflowInExecution();
-		System.out.println("CONAN 2");
 		workflowService.createClient(waitingTime, clientCallback);
-		System.out.println("CONAN 3");
 	}
 
 	static AsyncCallback<String> callback = new AsyncCallback<String>() {
@@ -158,15 +133,12 @@ public class TeleAssistance implements EntryPoint {
 
 		@Override
 		public void onFailure(Throwable caught) {
-			//displayProfit(-1.0);
 			System.out.println("Failure :/");
 		}
 
 		@Override
 		public void onSuccess(Boolean result) {
 			System.out.println("SUCCESS !");
-			displayProfit("true");
-			workflowFinished();
 			System.out.println("Finished");
 		}
 
