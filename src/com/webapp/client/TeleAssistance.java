@@ -49,7 +49,8 @@ public class TeleAssistance implements EntryPoint {
 	
 	public static native void serviceTimeout(JsArrayString description)/*-{
 		$wnd.app.serviceTimeout(description);
-
+	}-*/;
+	
 	public static native void printHealthData(JsArrayString data)/*-{
 		$wnd.app.printHealthData(data);
 	}-*/;
