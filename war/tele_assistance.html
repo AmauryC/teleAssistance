@@ -23,22 +23,30 @@
 
         <div id="app">
             <h1>Tele Assistance Simulation</h1>
-	            Click here to <a href="javascript:app.pickTask(0);">analyze your body metrics</a><br/>
-	            Click here to <a href="javascript:app.pickTask(1);">call the emergency services</a><br/>
-	            Click here to <a href="javascript:app.pickTask(-1);">stop the workflow</a><br/>
-			
-			</p>
+            	
+            <span class="device">
+	            <span class="checkup_button"><a href="javascript:app.pickTask(0);">CHECK UP</a></span>
+	            <span class="emergency_button"><a href="javascript:app.pickTask(1);">EMERGENCY</a></span><br/>
+	            <span class="stop_button"><a href="javascript:app.pickTask(-1);">STOP</a></span><br/>
+			</span>
 
             <div id="drugDiv">
             
             </div>
             
-            <div id="bpm_chart">
-            
-            </div>
-			
-			<div id="alarm-chart"></div>
-			<div id="lab-chart"></div>
+           <div class="medical_analysis">
+           		<div id="bpm-chart">
+           		</div>
+           	</div>
+           	
+           	<div id="alarm" class="alarm">
+           		EMERGENCY
+           	</div>
+           	
+           	<div class="failure_chart">
+				<div id="alarm-chart"></div>
+				<div id="lab-chart"></div>
+			</div>
         </div>
         
     </body>
