@@ -50,6 +50,9 @@ public class DrugService extends AtomicService {
 		customProperties.put("Reliability", 0.03);
 		customProperties.put("Performance", 1.1);
 		customProperties.put("Cost", 4.1);
+		
+		drugService.getServiceDescription().setResponseTime(2);
+		
 		drugService.startService();
 		drugService.register();
 
