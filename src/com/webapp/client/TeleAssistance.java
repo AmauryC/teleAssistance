@@ -49,6 +49,25 @@ public class TeleAssistance implements EntryPoint {
 	
 	public static native void serviceTimeout(JsArrayString description)/*-{
 		$wnd.app.serviceTimeout(description);
+
+	public static native void printHealthData(JsArrayString data)/*-{
+		$wnd.app.printHealthData(data);
+	}-*/;
+
+	public static native void printDrugData(JsArrayString jsArrayString)/*-{
+		$wnd.app.printDrugData(jsArrayString);
+	}-*/;
+
+	public static native void printBet(JsArrayString jsArrayString)/*-{
+		$wnd.app.printBet(jsArrayString);
+	}-*/;
+
+	public static native void printDecision(JsArrayString jsArrayString)/*-{
+		$wnd.app.printDecision(jsArrayString);
+	}-*/;
+
+	public static native void printAlarm()/*-{
+		$wnd.app.printAlarm();
 	}-*/;
 	
 	/**
@@ -85,6 +104,21 @@ public class TeleAssistance implements EntryPoint {
 								break;
 							case State.SERVICE_TIMEOUT:
 								serviceTimeout(jsArrayString);
+
+							case State.CHANGE_DOSES:
+								printDrugData(jsArrayString);
+								break;
+							case State.CHANGE_DRUG:
+								printDrugData(jsArrayString);
+								break;
+							case State.PRE_ANALYZE_DATA:
+								printHealthData(jsArrayString);
+								break;
+							case State.POST_ANALYZE_DATA:
+								printDecision(jsArrayString);
+								break;
+							case State.SEND_ALARM:
+								printAlarm();
 								break;
 							}
 						}

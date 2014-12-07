@@ -10,7 +10,6 @@ function App() {
 	this.paid = 0;
 	this.runs = 0;
 	
-	
 	this.charts = {
 			alarms: {
 				divId: "alarm-chart",
@@ -29,6 +28,8 @@ function App() {
 				ticks: [{v:0, f:"Failure"}]
 			},
 	};
+
+	this.graphValues = [ [ 't', 'BPM'] ];
 }
 
 App.prototype.start = function() {
@@ -107,11 +108,42 @@ App.prototype.workflowEnded = function() {
 	
 };
 
-App.prototype.displayProfit = function(profit){
-	console.log("displaying result ...");
-	var div = document.getElementById("workflow_result");
-	console.log(div);
-	div.innerText = "Result " +profit;
+App.prototype.printDrugData = function(array) {
+	var drugDiv = document.getElementById("drugDiv").innerHTML="Current drug : "+array[1]+"mg of "+array[0];
+};
+
+App.prototype.printHealthData = function(array){
+	document.getElementById("bpm_chart").innerHTML="";
+	var data = google.visualization.arrayToDataTable(this.graphValues);
+
+	var options = {
+			titlePosition: 'none',
+			legend: { position: 'bottom' },
+			height: 250,
+			vAxis: {
+				logScale: true
+			}
+	};
+
+	var chart = new google.visualization.LineChart(document.getElementById('bpm_chart'));
+
+	chart.draw(data, options);
+
+	for(var i=2;i<array.length;i++){
+		this.graphValues.push( [  this.currentIdx, 
+		                          parseFloat(array[i]), 
+		                          ]);
+		this.currentIdx++;
+	}
+
+};
+
+App.prototype.printAlarm = function(){
+	alert("EMERGENCY CALLED !");
+};
+
+App.prototype.printDecision = function(array){
+
 };
 
 App.prototype.initiateSequence = function(){

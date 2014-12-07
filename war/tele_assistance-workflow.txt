@@ -9,7 +9,7 @@ START [patientId]
 	changeDrug=0
 	changeDoses=1
 	sendAlarm=2
-		
+	analysis=-1
 	task=-2
 	
 	WHILE (task != stop){

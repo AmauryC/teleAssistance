@@ -2,6 +2,7 @@ package com.webapp.server;
 
 
 import service.composite.CompositeService;
+import service.atomic.AtomicService;
 import service.provider.AbstractService;
 
 import com.soa.client.Client;
@@ -43,43 +44,42 @@ WorkflowService, ServerMessageGeneratorService {
 
 		if(services[0] == null) {
 			services[0] = TeleAssistanceServiceRegistry.start();
-			System.out.println("PATATE 1 ");
-		}
+			}
 		if(services[1] == null) {
 			services[1] = MedicalAnalysis1Service.main(args, this);
-			System.out.println("PATATE 2 ");
+			((AtomicService) services[1]).setServiceBehavior(new AtomicServiceBehavior(this));
 		}
 		if(services[2] == null) {
 			services[2] = MedicalAnalysis2Service.main(args, this);
-			System.out.println("PATATE 3 ");
+			((AtomicService) services[2]).setServiceBehavior(new AtomicServiceBehavior(this));
 		}
 		if(services[3] == null) {
 			services[3] = MedicalAnalysis3Service.main(args, this);
-			System.out.println("PATATE 3 ");
+			((AtomicService) services[3]).setServiceBehavior(new AtomicServiceBehavior(this));		
 		}
 		if(services[4] == null) {
 			services[4] = MedicalAnalysis4Service.main(args, this);
-			System.out.println("PATATE 3 ");
+			((AtomicService) services[4]).setServiceBehavior(new AtomicServiceBehavior(this));		
 		}
 		if(services[5] == null) {
 			services[5] = MedicalAnalysis5Service.main(args, this);
-			System.out.println("PATATE 3 ");
+			((AtomicService) services[5]).setServiceBehavior(new AtomicServiceBehavior(this));
 		}
 		if(services[6] == null) {
 			services[6] = Alarm1Service.main(args, this); 
-			System.out.println("PATATE 4 ");
+			((AtomicService) services[6]).setServiceBehavior(new AtomicServiceBehavior(this));
 		}
 		if(services[7] == null){
 			services[7] = Alarm2Service.main(args, this);
-			System.out.println("PATATE 7 ");
+			((AtomicService) services[7]).setServiceBehavior(new AtomicServiceBehavior(this));
 		}
 		if(services[8] == null) {
 			services[8] = Alarm3Service.main(args, this);
-			System.out.println("PATATE 5 ");
+			((AtomicService) services[8]).setServiceBehavior(new AtomicServiceBehavior(this));
 		}
 		if(services[9] == null){
 			services[9] = DrugService.main(args, this);
-			System.out.println("PATATE 7 ");
+			((AtomicService) services[9]).setServiceBehavior(new AtomicServiceBehavior(this));
 		}
 		if(services[10] == null) {
 			String[] path = {getServletContext().getRealPath("tele_assistance-workflow.txt")};
