@@ -18,6 +18,9 @@ public class MedicalAnalysis2Service extends MedicalAnalysisService {
 		customProperties.put("Reliability", 0.001);
 		customProperties.put("Performance", 2.7);
 		customProperties.put("Cost", 8.9);
+		
+		medicalAnalysisService.getServiceDescription().setResponseTime(3);
+		
 		medicalAnalysisService.startService();
 		medicalAnalysisService.register();
 

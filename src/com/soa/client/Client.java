@@ -15,8 +15,11 @@ public class Client extends CompositeServiceClient {
 		String qosRequirement = "AnalysisStrategy";
 		
 		boolean stopped = false;
-
-		stopped = (boolean)this.invokeCompositeService(qosRequirement, patientId);
+		try {
+			stopped = (boolean)this.invokeCompositeService(qosRequirement, patientId);
+		} catch(ClassCastException e) {
+			
+		}
 		return stopped;
 	}
 }

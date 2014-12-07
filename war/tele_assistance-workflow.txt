@@ -12,7 +12,7 @@ START [patientId]
 	analysis=-1
 	task=-2
 	
-	WHILE (task != stop){
+	//WHILE (task != stop){
 		task = this.pickTask()
 		
 		IF (task == analyze ) {
@@ -37,6 +37,6 @@ START [patientId]
 			AlarmService.triggerAlarm()
 		}
 		
-	}
+	//}
 	
 RETURN true

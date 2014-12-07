@@ -1,5 +1,8 @@
 package com.webapp.server;
 
+import java.util.Map;
+import java.util.Random;
+
 import com.soa.object.AnalysisResult;
 import com.soa.object.Drug;
 import com.soa.object.HealthReport;
@@ -7,6 +10,7 @@ import com.soa.object.Patient;
 import com.webapp.client.event.State;
 
 import service.atomic.ExtraBehavior;
+import service.auxiliary.ServiceDescription;
 
 public class AtomicServiceBehavior extends ExtraBehavior {
 
@@ -17,8 +21,17 @@ public class AtomicServiceBehavior extends ExtraBehavior {
 		this.impl = impl;
 	}
 
-	public boolean preInvokeOperation(String operationName, Object... args) {
-		super.preInvokeOperation(operationName, args);
+	public boolean preInvokeOperation(ServiceDescription description, String operationName, Object... args) {
+		super.preInvokeOperation(description, operationName, args);
+		
+		Map<String, Object> customProperties = description.getCustomProperties();
+		if(customProperties.containsKey("Reliability")) {
+			int r = new Random().nextInt(100);
+			System.out.println("DRAW NUMBER " + r);
+			if(r < 50)
+				return false;
+		}
+		
 		String[] tab;
 		switch(operationName){
 		case "analyzeData": 
@@ -37,7 +50,7 @@ public class AtomicServiceBehavior extends ExtraBehavior {
 		return true;
 	}
 
-	public Object postInvokeOperation(String operationName, Object result, Object... args) {
+	public Object postInvokeOperation(ServiceDescription description, String operationName, Object result, Object... args) {
 		System.out.println("OPERATION NAME : "+operationName);
 		String[]  tab;
 		AnalysisResult ar;

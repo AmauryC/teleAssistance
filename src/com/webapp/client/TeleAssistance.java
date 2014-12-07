@@ -29,7 +29,8 @@ public class TeleAssistance implements EntryPoint {
 	 * service.
 	 */
 	private final static WorkflowServiceAsync workflowService = GWT
-			.create(WorkflowService.class);
+			.create(WorkflowService.class);	
+	
 
 	public static native void workflowStarted()/*-{
 		$wnd.app.workflowStarted();

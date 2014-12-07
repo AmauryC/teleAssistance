@@ -1,7 +1,6 @@
 /* global document: false */
 
 function App() {
-	this.locked = false;
 	this.completed = true;
 	this.assets = 1000.0;
 	this.winnings = 0;
@@ -63,25 +62,30 @@ App.prototype.drawChart = function() {
 	}
 };
 
-App.prototype.serviceSuccessful = function(description) {
+App.prototype.addInvokePoint = function(description, value) {
 	var serviceEndpoint = description[0];
 	
 	for(var services in this.charts) {
 		var c = this.charts[services];
 		if(c.endpointRegex.test(serviceEndpoint)) {
-			var chartValue = -1;
-			for(var i = 0; i < c.ticks.length; i++) {
-				if(c.ticks[i].f == description[0]) {
-					chartValue = c.ticks[i].v;
-				}
-			}
 			
-			if(chartValue == -1) {
-				chartValue = c.ticks.length;
-				c.ticks.push({
-					v: c.ticks.length,
-					f: description[0]
-				});
+			var chartValue = -1;
+			if(value == undefined) {
+				for(var i = 0; i < c.ticks.length; i++) {
+					if(c.ticks[i].f == description[0]) {
+						chartValue = c.ticks[i].v;
+					}
+				}
+				
+				if(chartValue == -1) {
+					chartValue = c.ticks.length;
+					c.ticks.push({
+						v: c.ticks.length,
+						f: description[0]
+					});
+				}
+			} else {
+				chartValue = value;
 			}
 			
 			c.data.addRow([""+this.runs, chartValue]);
@@ -90,6 +94,10 @@ App.prototype.serviceSuccessful = function(description) {
 			break;
 		}
 	}
+}
+
+App.prototype.serviceSuccessful = function(description) {
+	this.addInvokePoint(description);
 };
 
 App.prototype.serviceInvoked = function(description) {
@@ -97,7 +105,7 @@ App.prototype.serviceInvoked = function(description) {
 };
 
 App.prototype.serviceTimeout = function(description) {
-	
+	this.addInvokePoint(description, 0);
 };
 
 App.prototype.workflowStarted = function() {
@@ -105,7 +113,7 @@ App.prototype.workflowStarted = function() {
 };
 
 App.prototype.workflowEnded = function() {
-	
+	this.initiateSequence();
 };
 
 App.prototype.printDrugData = function(array) {
@@ -147,10 +155,7 @@ App.prototype.printDecision = function(array){
 };
 
 App.prototype.initiateSequence = function(){
-	if (!this.locked) {
-		this.locked = true;
-		launchWorkflow(0);
-	}
+	launchWorkflow(0);
 };
 
 App.prototype.pickTask = function(choice){

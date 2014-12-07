@@ -99,7 +99,12 @@ WorkflowService, ServerMessageGeneratorService {
 			client = new Client();
 		}
 		System.out.println("Starting the client ...");
-		boolean result = client.start();
+		boolean result = false;
+		try {
+			result = client.start();
+		} catch(ClassCastException e) {
+			System.out.println(e);
+		}
 
 		System.out.println("Returns the result");
 		return result;

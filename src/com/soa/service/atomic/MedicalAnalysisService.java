@@ -1,5 +1,8 @@
 package com.soa.service.atomic;
 
+import java.util.Map;
+import java.util.Random;
+
 import com.soa.object.AnalysisResult;
 import com.soa.object.Decision;
 import com.soa.object.Drug;
@@ -17,7 +20,6 @@ public class MedicalAnalysisService extends AtomicService {
 	
 	@ServiceOperation
 	public AnalysisResult analyzeData(HealthReport healthReport) {
-		
 		int normalRate = Patient.NORMAL_HEART_RATE;
 		int normalVariation = Patient.NORMAL_RATE_VARIATION;
 		
