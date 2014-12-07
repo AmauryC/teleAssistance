@@ -116,9 +116,9 @@ App.prototype.addInvokePoint = function(description, value) {
 						v: c.ticks.length,
 						f: description[0]
 					});
-				} else {
-					chartValue = value;
 				}
+			} else {
+				chartValue = value;
 			}
 
 			c.data.addRow([""+this.runs, chartValue]);
