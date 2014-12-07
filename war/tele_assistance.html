@@ -26,9 +26,14 @@
 		<h1>Tele Assistance Simulation</h1>
 
 		<div class="medical_analysis">
-			<p><b>Medical Analysis Service</b></p>
+			<p>
+				<b>Medical Analysis Service</b>
+			</p>
 			<div class="border-box">
 				<div id="bpm-chart"></div>
+				<p class="decision">
+					<b>Decision:</b> <span id="decision"></span>
+				</p>
 			</div>
 		</div>
 
@@ -42,7 +47,20 @@
 				href="javascript:app.pickTask(-1);">STOP</a></span><br />
 		</span>
 
-		<div id="drugDiv"></div>
+		<div id="drugService">
+			<p class="device_title">
+				<b>Drug Service</b>
+			</p>
+			<div class="device">
+				<div id="drugDiv">
+					<p>
+						<b>Drug : </b> <br /> <b>Doses: </b>
+					</p>
+				</div>
+			</div>
+		</div>
+
+
 
 
 

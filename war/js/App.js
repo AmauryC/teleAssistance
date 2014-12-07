@@ -150,7 +150,8 @@ App.prototype.workflowEnded = function() {
 };
 
 App.prototype.printDrugData = function(array) {
-	var drugDiv = document.getElementById("drugDiv").innerHTML="Current drug : "+array[1]+"mg of "+array[0];
+	console.log("<p><b>Drug : </b>"+array[0]+"<br/><b>Doses: </b>"+array[1]+" mg</p>");
+	var drugDiv = document.getElementById("drugDiv").innerHTML="<p><b>Drug : </b>"+array[0]+"<br/><b>Doses: </b>"+array[1]+" mg</p>";
 };
 
 App.prototype.printHealthData = function(array){
@@ -169,7 +170,7 @@ App.prototype.printAlarm = function(){
 };
 
 App.prototype.printDecision = function(array){
-
+	document.getElementById("decision").innerHTML=""+array[0];
 };
 
 App.prototype.initiateSequence = function(){

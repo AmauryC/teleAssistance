@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Random;
 
 import com.soa.object.AnalysisResult;
+import com.soa.object.Decision;
 import com.soa.object.Drug;
 import com.soa.object.HealthReport;
 import com.webapp.client.event.State;
@@ -25,10 +26,10 @@ public class AtomicServiceBehavior extends ExtraBehavior {
 		
 		Map<String, Object> customProperties = description.getCustomProperties();
 		if(customProperties.containsKey("Reliability")) {
-			int r = new Random().nextInt(100);
+			/*int r = new Random().nextInt(100);
 			System.out.println("DRAW NUMBER " + r);
 			if(r < 50)
-				return false;
+				return false;*/
 		}
 		
 		String[] tab;
@@ -76,9 +77,8 @@ public class AtomicServiceBehavior extends ExtraBehavior {
 			break;
 		case "analyzeData":
 			ar = ((AnalysisResult) result);
-			tab = new String[2];
-			tab[0] = drugToString(ar.getDrug());
-			tab[1] = ""+ar.getDoses();
+			tab = new String[1];
+			tab[0] = decisionToString(ar.getDecision());
 			impl.updateClientUI(tab, State.POST_ANALYZE_DATA);
 			break;
 		case "triggerAlarm":
@@ -100,6 +100,19 @@ public class AtomicServiceBehavior extends ExtraBehavior {
 		}
 		else{
 			return "No drug";
+		}
+	}
+	
+	private String decisionToString(Decision decision){
+		switch(decision){
+		case CHANGE_DOSES:
+			return "Change doses";
+		case CHANGE_DRUG:
+			return "Change drug";
+		case NOTHING:
+			return "Do nothing";
+		default:
+			return "Do nothing";
 		}
 	}
 }

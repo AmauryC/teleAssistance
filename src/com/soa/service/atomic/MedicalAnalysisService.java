@@ -26,7 +26,7 @@ public class MedicalAnalysisService extends AtomicService {
 		int first = healthReport.getHeartRate()[0];
 		int last = healthReport.getHeartRate()[49];
 		
-		if(last+normalVariation > 170 && last-normalVariation < 15){
+		if(last+normalVariation > 170 || last-normalVariation < 15){
 			return new AnalysisResult(Decision.ALARM);
 		}
 		else if(last<=first+normalVariation && last>=first-normalVariation){
