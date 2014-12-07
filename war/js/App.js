@@ -37,6 +37,8 @@ function App() {
 
 App.prototype.start = function() {
 	this.initiateSequence();
+	
+	//HealthChart
 	this.healthChart.chart = new google.visualization.LineChart(document.getElementById("bpm-chart"));
 	this.healthChart.data = new google.visualization.DataTable();
 	this.healthChart.data.addColumn('string', 'BPM');
@@ -49,6 +51,24 @@ App.prototype.start = function() {
 	};
 	google.load("visualization", "1", {packages:["corechart"]});
 	this.drawChart();
+	
+	//Toogle 
+	var app = document.getElementByd("startApp");
+	app.addEventListener("click", displayApp, false); 
+	
+	var failure = document.getElementByd("startFailure");
+	failure.addEventListener("click", displayFailure, false); 
+	
+};
+
+App.prototype.displayApp = function() {
+	document.getElementById("startFailure").style.display="none";
+	document.getElementByd("startApp").style.display="block";
+};
+
+App.prototype.displayFailure = function() {
+	document.getElementById("startFailure").style.display="block";
+	document.getElementByd("startApp").style.display="none";
 };
 
 App.prototype.drawChart = function() {
