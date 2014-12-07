@@ -31,40 +31,24 @@ public class TeleAssistance implements EntryPoint {
 	private final static WorkflowServiceAsync workflowService = GWT
 			.create(WorkflowService.class);
 
-	public static native void printSportEventTable(JsArrayString events)/*-{
-		$wnd.app.printSportEventTable(events);
+	public static native void printHealthData(JsArrayString data)/*-{
+		$wnd.app.printHealthData(data);
 	}-*/;
 
-	public static native void printOdds(JsArrayString jsArrayString)/*-{
-		$wnd.app.printOdds(jsArrayString);
+	public static native void printDrugData(JsArrayString jsArrayString)/*-{
+		$wnd.app.printDrugData(jsArrayString);
 	}-*/;
 
 	public static native void printBet(JsArrayString jsArrayString)/*-{
 		$wnd.app.printBet(jsArrayString);
 	}-*/;
 
-	public static native void printProfit(JsArrayString jsArrayString)/*-{
-		$wnd.app.printProfit(jsArrayString);
+	public static native void printDecision(JsArrayString jsArrayString)/*-{
+		$wnd.app.printDecision(jsArrayString);
 	}-*/;
 
-	public static native void displayProfit(String s)/*-{
-		$wnd.app.displayProfit(s);
-	}-*/;
-
-	public static native void computeAssets(double paid)/*-{
-		$wnd.app.computeAssets(paid);
-	}-*/;
-
-	public static native void highlight(String call)/*-{
-		$wnd.parser.highlight(call);
-	}-*/;
-
-	public static native void workflowInExecution()/*-{
-		$wnd.parser.workflowInExecution();
-	}-*/;
-
-	public static native void workflowFinished()/*-{
-		$wnd.parser.workflowFinished();
+	public static native void printAlarm()/*-{
+		$wnd.app.printAlarm();
 	}-*/;
 
 	/**
@@ -73,7 +57,7 @@ public class TeleAssistance implements EntryPoint {
 	public void onModuleLoad() {
 		exportJSFunction();
 
-		/*RemoteEventService theRemoteEventService = RemoteEventServiceFactory
+		RemoteEventService theRemoteEventService = RemoteEventServiceFactory
 				.getInstance().getRemoteEventService();
 		// add a listener to the SERVER_MESSAGE_DOMAIN
 		theRemoteEventService.addListener(UpdateUIEvent.SERVER_MESSAGE_DOMAIN,
@@ -87,30 +71,25 @@ public class TeleAssistance implements EntryPoint {
 							JsArrayString jsArrayString = arrayToJsArray(tab);
 
 							switch (state) {
-							case State.GET_SPORT_EVENTS:
-								printSportEventTable(jsArrayString);
+							case State.CHANGE_DOSES:
+								printDrugData(jsArrayString);
 								break;
-							case State.REQUEST_ODDS:
-								printOdds(jsArrayString);
+							case State.CHANGE_DRUG:
+								printDrugData(jsArrayString);
 								break;
-							case State.PLACE_BET:
-								printBet(jsArrayString);
+							case State.PRE_ANALYZE_DATA:
+								printHealthData(jsArrayString);
 								break;
-							case State.REQUEST_PROFIT:
-								printProfit(jsArrayString);
+							case State.POST_ANALYZE_DATA:
+								printDecision(jsArrayString);
 								break;
-							case State.MAKE_PAYMENT:
-								double paid = Double.parseDouble(tab[0]);
-								computeAssets(paid);
+							case State.SEND_ALARM:
+								printAlarm();
 								break;
-							case State.LOCAL_OPERATION:
-								System.out.println("### LOCAL " + tab[0]);
 							}
-
-							highlight(tab[tab.length - 1]);
 						}
 					}
-				});*/
+				});
 
 		workflowService.initialize(callback);
 	}
@@ -132,11 +111,7 @@ public class TeleAssistance implements EntryPoint {
 		workflowService.sendTask(choice, pickTaskCallback);
 	}
 	public static void launchWorkflow(int waitingTime) {
-		System.out.println("CONAN 1");
-		workflowInExecution();
-		System.out.println("CONAN 2");
 		workflowService.createClient(waitingTime, clientCallback);
-		System.out.println("CONAN 3");
 	}
 
 	static AsyncCallback<String> callback = new AsyncCallback<String>() {
@@ -165,8 +140,6 @@ public class TeleAssistance implements EntryPoint {
 		@Override
 		public void onSuccess(Boolean result) {
 			System.out.println("SUCCESS !");
-			displayProfit("true");
-			workflowFinished();
 			System.out.println("Finished");
 		}
 

@@ -61,7 +61,13 @@ public class MedicalAnalysisService extends AtomicService {
 			Drug drug = healthReport.getDrug();
 			if(drug == Drug.DRUG1 || drug == Drug.NONE ){
 				double doses = (last-normalRate)/10;
-				return new AnalysisResult(Decision.CHANGE_DOSES, Drug.DRUG1, doses);
+				if(drug == Drug.NONE){
+					return new AnalysisResult(Decision.CHANGE_DRUG, Drug.DRUG1, doses);
+				}
+				else{
+					return new AnalysisResult(Decision.CHANGE_DOSES, Drug.DRUG1, doses);
+				}
+				
 			}
 			//Case DRUG2
 			else {
