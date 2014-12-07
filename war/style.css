@@ -1,7 +1,7 @@
 body {
-    font-family: Arial;
-    margin: 0;
-    padding: 0;
+	font-family: Arial;
+	margin: 0;
+	padding: 0;
 }
 
 nav#navpage {
@@ -38,35 +38,85 @@ nav#navpage a.selected {
 	min-width: 140px;
 }
 
+a {
+	text-decoration: none;
+}
 
 #app h1 {
-  font-size: 2em;
-  font-weight: bold;
-  color: #777777;
-  margin: 40px 0px 70px;
-  text-align: center;
+	font-size: 2em;
+	font-weight: bold;
+	color: #777777;
+	margin: 40px 0px 70px;
+	text-align: center;
 }
 
 #app .sendButton {
-  display: block;
-  font-size: 16pt;
+	display: block;
+	font-size: 16pt;
 }
 
 /** Most GWT widgets already have a style name defined */
 #app .gwt-DialogBox {
-  width: 400px;
+	width: 400px;
 }
 
 #app .dialogVPanel {
-  margin: 5px;
+	margin: 5px;
 }
 
 #app .serverResponseLabelError {
-  color: red;
+	color: red;
 }
 
 /** Set ids using widget.getElement().setId("idOfElement") */
 #app #closeButton {
-  margin: 15px 6px 6px;
+	margin: 15px 6px 6px;
 }
 
+.device {
+	margin-left:20px;
+	padding:10px;
+	border: 1px solid black;
+	display: inline-block;
+}
+
+.checkup_button a {
+	padding:5px;
+	border: 1px solid #ccc;
+	color: black;
+	text-decoration: none;
+	display:inline-block;
+}
+
+.emergency_button a {
+	padding:5px;
+	background-color: red;
+	display:inline-block;
+	color: white;
+	text-decoration: none;
+}
+
+.stop_button a {
+	padding:5px;
+	margin-top:10px;
+	display:inline-block;
+	border: 1px solid #ccc;
+	color: black;
+	text-decoration: none;
+}
+
+.medical_analysis{
+	float:right;
+	width:300px;
+}
+
+.failure_chart{
+	width:700px;
+}
+
+.alarm{
+	margin-left:30px;
+	bottom:30px;
+	color:#CCC;
+	font-size:300%;
+}

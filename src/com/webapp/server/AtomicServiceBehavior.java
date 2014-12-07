@@ -3,7 +3,6 @@ package com.webapp.server;
 import com.soa.object.AnalysisResult;
 import com.soa.object.Drug;
 import com.soa.object.HealthReport;
-import com.soa.object.Patient;
 import com.webapp.client.event.State;
 
 import service.atomic.ExtraBehavior;
@@ -69,7 +68,7 @@ public class AtomicServiceBehavior extends ExtraBehavior {
 			tab[1] = ""+ar.getDoses();
 			impl.updateClientUI(tab, State.POST_ANALYZE_DATA);
 			break;
-		case "sendAlarm":
+		case "triggerAlarm":
 			tab = new String[1];
 			tab[0] = "Alarm";
 			impl.updateClientUI(tab, State.SEND_ALARM);

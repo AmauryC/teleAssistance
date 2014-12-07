@@ -9,7 +9,7 @@ function App() {
 	this.currentIdx = 0;
 	this.paid = 0;
 	this.runs = 0;
-	
+
 	this.charts = {
 			alarms: {
 				divId: "alarm-chart",
@@ -28,15 +28,28 @@ function App() {
 				ticks: [{v:0, f:"Failure"}]
 			},
 	};
-
-	this.graphValues = [ [ 't', 'BPM'] ];
+	this.healthChart = {
+			divId: "bpm-chart",
+			chart: null,
+			data: null,
+			options: null
+	};
 }
 
 App.prototype.start = function() {
 	this.initiateSequence();
-	
+	this.healthChart.chart = new google.visualization.LineChart(document.getElementById("bpm-chart"));
+	this.healthChart.data = new google.visualization.DataTable();
+	this.healthChart.data.addColumn('string', 'BPM');
+	this.healthChart.data.addColumn('number', 'BPM');
+	this.healthChart.options = {
+			title: 'Health Data',
+			vAxis: {
+				title: 'Heartbeat'
+			}
+	};
 	google.load("visualization", "1", {packages:["corechart"]});
-    this.drawChart();
+	this.drawChart();
 };
 
 App.prototype.drawChart = function() {
@@ -49,23 +62,23 @@ App.prototype.drawChart = function() {
 		c.data.addColumn('number', 'Strategy 1');
 
 
-	    c.options = {
-	      title: 'Invocation results',
-	      vAxis: {
-	    	  title: 'Selection result',
-	    	  ticks: c.ticks
-	      },	
-	      isStacked: true
-	    };
+		c.options = {
+				title: 'Invocation results',
+				vAxis: {
+					title: 'Selection result',
+					ticks: c.ticks
+				},	
+				isStacked: true
+		};
 
-	    c.chart = new google.visualization.SteppedAreaChart(document.getElementById(c.divId));
-	    c.chart.draw(c.data, c.options);
+		c.chart = new google.visualization.SteppedAreaChart(document.getElementById(c.divId));
+		c.chart.draw(c.data, c.options);
 	}
 };
 
 App.prototype.serviceSuccessful = function(description) {
 	var serviceEndpoint = description[0];
-	
+
 	for(var services in this.charts) {
 		var c = this.charts[services];
 		if(c.endpointRegex.test(serviceEndpoint)) {
@@ -75,7 +88,7 @@ App.prototype.serviceSuccessful = function(description) {
 					chartValue = c.ticks[i].v;
 				}
 			}
-			
+
 			if(chartValue == -1) {
 				chartValue = c.ticks.length;
 				c.ticks.push({
@@ -83,29 +96,29 @@ App.prototype.serviceSuccessful = function(description) {
 					f: description[0]
 				});
 			}
-			
+
 			c.data.addRow([""+this.runs, chartValue]);
 			c.chart.draw(c.data,c.options);
-			
+
 			break;
 		}
 	}
 };
 
 App.prototype.serviceInvoked = function(description) {
-	
+
 };
 
 App.prototype.serviceTimeout = function(description) {
-	
+
 };
 
 App.prototype.workflowStarted = function() {
-	
+
 };
 
 App.prototype.workflowEnded = function() {
-	
+
 };
 
 App.prototype.printDrugData = function(array) {
@@ -113,33 +126,18 @@ App.prototype.printDrugData = function(array) {
 };
 
 App.prototype.printHealthData = function(array){
-	document.getElementById("bpm_chart").innerHTML="";
-	var data = google.visualization.arrayToDataTable(this.graphValues);
-
-	var options = {
-			titlePosition: 'none',
-			legend: { position: 'bottom' },
-			height: 250,
-			vAxis: {
-				logScale: true
-			}
-	};
-
-	var chart = new google.visualization.LineChart(document.getElementById('bpm_chart'));
-
-	chart.draw(data, options);
 
 	for(var i=2;i<array.length;i++){
-		this.graphValues.push( [  this.currentIdx, 
-		                          parseFloat(array[i]), 
-		                          ]);
+		this.healthChart.data.addRow([""+this.currentIdx, parseFloat(array[i])]);
 		this.currentIdx++;
 	}
-
+	this.healthChart.chart.draw(this.healthChart.data, this.healthChart.options);
 };
 
 App.prototype.printAlarm = function(){
-	alert("EMERGENCY CALLED !");
+	var alarm = document.getElementById("alarm");
+	alarm.style.textDecoration = "blink";
+	alarm.style.color="red";
 };
 
 App.prototype.printDecision = function(array){
