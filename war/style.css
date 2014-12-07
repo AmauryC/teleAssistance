@@ -111,12 +111,21 @@ a {
 }
 
 .failure_chart{
-	width:700px;
+	
+}
+
+.drugDiv{
+	float:right;
 }
 
 .alarm{
 	margin-left:30px;
 	bottom:30px;
+	position:absolute;
 	color:#CCC;
 	font-size:300%;
+}
+
+#failure{
+	display:none;
 }

@@ -53,10 +53,10 @@ App.prototype.start = function() {
 	this.drawChart();
 	
 	//Toogle 
-	var app = document.getElementById("app");
+	var app = document.getElementById("startApp");
 	app.addEventListener("click", this.displayApp, false); 
 	
-	var failure = document.getElementById("failure");
+	var failure = document.getElementById("startFailure");
 	failure.addEventListener("click", this.displayFailure, false); 
 	
 };
