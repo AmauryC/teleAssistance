@@ -14,9 +14,9 @@ public class DirectStrategyQoS extends AutomaticStrategyQoS {
 		HashMap<String, HashMap<String, Integer>> weights = new HashMap<String, HashMap<String, Integer>>();
 		
 		HashMap<String, Integer> alarmsW = new HashMap<String, Integer>();
-		alarmsW.put("Cost", 10);
-		alarmsW.put("Performance", 30);
-		alarmsW.put("Reliability", 60);
+		alarmsW.put("Cost", 0);
+		alarmsW.put("Performance", 10);
+		alarmsW.put("Reliability", 90);
 		weights.put("AlarmService", alarmsW);
 		
 		HashMap<String, Integer> labW = new HashMap<String, Integer>();

@@ -26,10 +26,10 @@ public class AtomicServiceBehavior extends ExtraBehavior {
 		
 		Map<String, Object> customProperties = description.getCustomProperties();
 		if(customProperties.containsKey("Reliability")) {
-			/*int r = new Random().nextInt(100);
+			int r = new Random().nextInt(100);
 			System.out.println("DRAW NUMBER " + r);
-			if(r < 50)
-				return false;*/
+			if(r < 20)
+				return false;
 		}
 		
 		String[] tab;

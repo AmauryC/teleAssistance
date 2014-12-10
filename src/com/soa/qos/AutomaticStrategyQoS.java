@@ -23,10 +23,10 @@ public class AutomaticStrategyQoS implements AbstractQoSRequirement {
 					strategy = new AnalysisStrategyQoS();
 				}
 			} catch(ClassCastException e) {
-				strategy = new DirectStrategyQoS();
+				strategy = new AnalysisStrategyQoS();
 			}
 		} else {
-			strategy = new DirectStrategyQoS();
+			strategy = new AnalysisStrategyQoS();
 		}
 		this.weights = strategy.getWeights();
 		

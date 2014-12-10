@@ -38,7 +38,7 @@ function App() {
 
 App.prototype.start = function() {
 	this.initiateSequence();
-	window.setTimeout(isWorkflowStarted, 3000);
+	window.setTimeout(isWorkflowStarted, 5000);
 	
 	//Toogle 
 	var app = document.getElementById("startApp");
@@ -197,9 +197,21 @@ App.prototype.printHealthData = function(array){
 };
 
 App.prototype.printAlarm = function(){
-	var alarm = document.getElementById("alarm");
-	alarm.style.textDecoration = "blink";
-	alarm.style.color="red";
+	var on = function(alarm) {
+		document.getElementById("alarm").style.color="red";
+	};
+	var off = function() {
+		document.getElementById("alarm").style.color="#CCC";
+	};
+	
+	var onId = window.setInterval(on, 200);
+	var offId = window.setInterval(off, 300);
+	
+	window.setTimeout(function() {
+		window.clearTimeout(onId);
+		window.clearTimeout(offId);
+		off();
+	}, 5000);
 };
 
 App.prototype.printDecision = function(array){
@@ -219,4 +231,8 @@ App.prototype.pickTask = function(choice){
 	for(var i = 0; i < disablers.length; i++) {
 		disablers[i].style.display = "block";
 	}
+};
+
+App.prototype.reconnect = function() {
+	isWorkflowStarted();
 };
