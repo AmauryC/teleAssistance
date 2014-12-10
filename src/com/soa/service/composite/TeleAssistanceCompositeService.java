@@ -10,7 +10,6 @@ import com.soa.qos.CostQoS;
 import com.soa.qos.DirectStrategyQoS;
 import com.soa.qos.PerformanceQoS;
 import com.soa.qos.ReliabilityQoS;
-import com.soa.service.atomic.graphical.GraphicalTeleAssistanceCompositeService;
 import com.webapp.server.WorkflowServiceImpl;
 
 import service.auxiliary.LocalOperation;
@@ -23,8 +22,8 @@ public class TeleAssistanceCompositeService extends CompositeService {
 	private Patient patient;
 	private int choice=-2;
 
-	public static TeleAssistanceCompositeService main(String[] args, WorkflowServiceImpl impl) {
-		TeleAssistanceCompositeService compositeService = new GraphicalTeleAssistanceCompositeService(args[0], impl);
+	public static TeleAssistanceCompositeService main(String[] args) {
+		TeleAssistanceCompositeService compositeService = new TeleAssistanceCompositeService(args[0]);
 		compositeService.start();
 
 		return compositeService;

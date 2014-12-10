@@ -1,7 +1,12 @@
+html {
+	min-height: 100%;
+}
+
 body {
 	font-family: Arial;
 	margin: 0;
 	padding: 0;
+	min-height: 100%;
 }
 
 nav#navpage {
@@ -166,4 +171,18 @@ a {
 
 #failure{
 	display:none;
+}
+
+div#systemstopped {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	background-color: grey;
+	opacity: 0.9;
+	font-size: 40px;
+	padding-top: 200px;
+	text-align: center;
+	display: none;
 }

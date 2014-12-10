@@ -45,6 +45,7 @@ public class AutomaticStrategyQoS implements AbstractQoSRequirement {
 			
 			for(int i = 0; i < serviceCount; i++) {
 				HashMap<String, Object> properties = serviceDescriptions.get(i).getCustomProperties();
+				properties.remove("ResponseTime");
 				
 				if (properties.containsKey(currentQoS)){
 					double value = (double)properties.get(currentQoS);
