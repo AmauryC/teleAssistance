@@ -2,10 +2,10 @@
 
 function App() {
 	this.completed = true;
-	
+
 	this.runs = [0, 0, 0];
 	this.currentStrategy = 0;
-
+	this.currentIdx=0;
 	this.charts = {
 			alarms: {
 				strategy: 1,
@@ -39,14 +39,14 @@ function App() {
 App.prototype.start = function() {
 	this.initiateSequence();
 	window.setTimeout(isWorkflowStarted, 5000);
-	
+
 	//Toogle 
 	var app = document.getElementById("startApp");
 	app.addEventListener("click", this.displayApp, false); 
-	
+
 	var failure = document.getElementById("startFailure");
 	failure.addEventListener("click", this.displayFailure, false); 
-	
+
 	this.drawChart();
 };
 
@@ -82,7 +82,7 @@ App.prototype.drawChart = function() {
 		c.chart = new google.visualization.SteppedAreaChart(document.getElementById(c.divId));
 		//c.chart.draw(c.data, c.options);
 	}
-	
+
 	//HealthChart
 	this.healthChart.chart = new google.visualization.LineChart(document.getElementById("bpm-chart"));
 	this.healthChart.data = new google.visualization.DataTable();
@@ -105,11 +105,11 @@ App.prototype.addInvokePoint = function(description, value) {
 	for(var services in this.charts) {
 		var c = this.charts[services];
 		if(c.endpointRegex.test(serviceEndpoint)) {
-			
+
 			var chartValue = -1;
 			if(value == undefined) {
 				for(var i = 0; i < c.ticks.length; i++) {
-					
+
 					if(c.ticks[i].f == serviceName) {
 						chartValue = c.ticks[i].v;
 					}
@@ -149,7 +149,7 @@ App.prototype.addInvokePoint = function(description, value) {
 
 App.prototype.serviceSuccessful = function(description) {
 	this.addInvokePoint(description);
-	
+
 	var disablers = document.querySelectorAll('.disabler');
 	for(var i = 0; i < disablers.length; i++) {
 		disablers[i].style.display = "none";
@@ -183,8 +183,13 @@ App.prototype.workflowEnded = function() {
 };
 
 App.prototype.printDrugData = function(array) {
-	console.log("<p><b>Drug : </b>"+array[0]+"<br/><b>Doses: </b>"+array[1]+" mg</p>");
-	var drugDiv = document.getElementById("drugDiv").innerHTML="<p><b>Drug : </b>"+array[0]+"<br/><b>Doses: </b>"+array[1]+" mg</p>";
+	if(array.length<2){
+
+	}else{
+		console.log("<p><b>Drug : </b>"+array[0]+"<br/><b>Doses: </b>"+array[1]+" mg</p>");
+		var drugDiv = document.getElementById("drugDiv").innerHTML="<p><b>Drug : </b>"+array[0]+"<br/><b>Doses: </b>"+array[1]+" mg</p>";
+	}
+
 };
 
 App.prototype.printHealthData = function(array){
@@ -203,10 +208,10 @@ App.prototype.printAlarm = function(){
 	var off = function() {
 		document.getElementById("alarm").style.color="#CCC";
 	};
-	
+
 	var onId = window.setInterval(on, 200);
 	var offId = window.setInterval(off, 300);
-	
+
 	window.setTimeout(function() {
 		window.clearTimeout(onId);
 		window.clearTimeout(offId);
@@ -226,7 +231,7 @@ App.prototype.pickTask = function(choice){
 	sendTask(choice);
 	++this.runs[choice];
 	this.currentStrategy = choice;
-	
+
 	var disablers = document.querySelectorAll('.disabler');
 	for(var i = 0; i < disablers.length; i++) {
 		disablers[i].style.display = "block";
