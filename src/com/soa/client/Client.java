@@ -12,7 +12,7 @@ public class Client extends CompositeServiceClient {
 
 	public boolean start() {	
 
-		String qosRequirement = "AnalysisStrategy";
+		String qosRequirement = "AutomaticStrategy";
 		
 		boolean stopped = false;
 		try {

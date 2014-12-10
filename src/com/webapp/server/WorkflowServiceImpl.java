@@ -66,15 +66,15 @@ WorkflowService, ServerMessageGeneratorService {
 			((AtomicService) services[5]).setServiceBehavior(new AtomicServiceBehavior(this));
 		}
 		if(services[6] == null) {
-			services[6] = Alarm1Service.main(args, this); 
+			services[6] = Alarm1Service.main(args); 
 			((AtomicService) services[6]).setServiceBehavior(new AtomicServiceBehavior(this));
 		}
 		if(services[7] == null){
-			services[7] = Alarm2Service.main(args, this);
+			services[7] = Alarm2Service.main(args);
 			((AtomicService) services[7]).setServiceBehavior(new AtomicServiceBehavior(this));
 		}
 		if(services[8] == null) {
-			services[8] = Alarm3Service.main(args, this);
+			services[8] = Alarm3Service.main(args);
 			((AtomicService) services[8]).setServiceBehavior(new AtomicServiceBehavior(this));
 		}
 		if(services[9] == null){
@@ -129,5 +129,10 @@ WorkflowService, ServerMessageGeneratorService {
 			composite.notify();
 		}
 		return true;
+	}
+	
+	public boolean isWorkflowStarted() {
+		TeleAssistanceCompositeService composite = ((TeleAssistanceCompositeService)services[10]);
+		return composite.isWorkflowStarted();
 	}
 }

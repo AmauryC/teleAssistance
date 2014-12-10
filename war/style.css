@@ -73,12 +73,30 @@ a {
 	margin: 15px 6px 6px;
 }
 
+.disabler {
+	margin-left: 20px;
+	padding: 10px;
+	margin-top: 0px;
+	border: 1px solid black;
+	position: absolute;
+	background-color: grey;
+	opacity: 0.3;
+	width: 177px;
+	height: 86px;
+	
+	background-image: url('img/loading.gif');
+	background-position: center center;
+	background-repeat: no-repeat;
+}
+
 .device {
 	margin-left:20px;
 	padding:10px;
 	margin-top:0px;
 	border: 1px solid black;
 	display: inline-block;
+	height: 86px;
+	width: 177px;
 }
 .border-box{
 	border:1px solid black;

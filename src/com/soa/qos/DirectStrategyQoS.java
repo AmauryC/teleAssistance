@@ -7,21 +7,30 @@ import service.auxiliary.ServiceDescription;
 import service.workflow.AbstractQoSRequirement;
 
 
-public class DirectStrategyQoS extends StrategyQoS {
-	private int costW, timeW, failureW;
+public class DirectStrategyQoS extends AutomaticStrategyQoS {
 	
-	public DirectStrategyQoS() {
-		super();
+	public HashMap<String, HashMap<String,Integer>> getWeights() {
+		System.out.println("DIRECT STRATEGY");
+		HashMap<String, HashMap<String, Integer>> weights = new HashMap<String, HashMap<String, Integer>>();
 		
-		HashMap<String, int[]> weights = new HashMap<String, int[]>();
+		HashMap<String, Integer> alarmsW = new HashMap<String, Integer>();
+		alarmsW.put("Cost", 10);
+		alarmsW.put("Performance", 30);
+		alarmsW.put("Reliability", 60);
+		weights.put("AlarmService", alarmsW);
 		
-		int[] alarmServices = {10, 30, 60};
-		weights.put("AlarmService", alarmServices);
-		int[] analysisServices = {33, 33, 33};
-		weights.put("MedicalAnalysisService", analysisServices);
-		int[] drugServices = {33, 33, 33};
-		weights.put("DrugService", drugServices);
+		HashMap<String, Integer> labW = new HashMap<String, Integer>();
+		labW.put("Cost", 33);
+		labW.put("Performance", 33);
+		labW.put("Reliability", 33);
+		weights.put("MedicalAnalysisService", labW);
 		
-		this.init(weights);
+		HashMap<String, Integer> drugW = new HashMap<String, Integer>();
+		drugW.put("Cost", 33);
+		drugW.put("Performance", 33);
+		drugW.put("Reliability", 33);
+		weights.put("DrugService", drugW);
+
+		return weights;
 	}
 }

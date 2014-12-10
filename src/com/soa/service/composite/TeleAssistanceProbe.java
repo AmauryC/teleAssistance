@@ -46,6 +46,7 @@ public class TeleAssistanceProbe implements Probe {
 	public void workflowStarted(String arg0, Object[] arg1) {
 		String[] parameters = {};
 		impl.updateClientUI(parameters, State.WORKFLOW_STARTED);
+		System.out.println("WORKFLOW STARTED");
 	}
 
 	/**

@@ -10,7 +10,7 @@ import service.workflow.AbstractQoSRequirement;
 public class PerformanceQoS implements AbstractQoSRequirement {
 
     @Override
-    public ServiceDescription applyQoSRequirement(List<ServiceDescription> serviceDescriptions) {
+    public ServiceDescription applyQoSRequirement(List<ServiceDescription> serviceDescriptions, String opName, Object[] params) {
 		double min = Double.MAX_VALUE;
 		int index = 0;
 		

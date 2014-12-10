@@ -5,6 +5,7 @@ import com.soa.object.Decision;
 import com.soa.object.HealthReport;
 import com.soa.object.Patient;
 import com.soa.qos.AnalysisStrategyQoS;
+import com.soa.qos.AutomaticStrategyQoS;
 import com.soa.qos.CostQoS;
 import com.soa.qos.DirectStrategyQoS;
 import com.soa.qos.PerformanceQoS;
@@ -18,6 +19,7 @@ import service.composite.CompositeService;
 public class TeleAssistanceCompositeService extends CompositeService {
 
 	private String pathToWorkflow;
+	private boolean workflowStarted;
 	private Patient patient;
 	private int choice=-2;
 
@@ -32,15 +34,14 @@ public class TeleAssistanceCompositeService extends CompositeService {
 		super("TeleAssistance", "se.lnu.course4dv110", path);
 		this.pathToWorkflow = path;
 		this.patient = Patient.getInstance();
-
+		this.workflowStarted = false;
 	}
 
 	public void start() {
 		this.addQosRequirement("Performance", new PerformanceQoS());
 		this.addQosRequirement("Reliability", new ReliabilityQoS());
 		this.addQosRequirement("Cost", new CostQoS());
-		this.addQosRequirement("DirectStrategy", new DirectStrategyQoS());
-		this.addQosRequirement("AnalysisStrategy", new AnalysisStrategyQoS());
+		this.addQosRequirement("AutomaticStrategy", new AutomaticStrategyQoS());
 		this.startService();
 		this.register();
 	}
@@ -55,6 +56,8 @@ public class TeleAssistanceCompositeService extends CompositeService {
 	public int pickTask(){
 		try {
 			System.out.println("Waiting for user input");
+			this.workflowStarted = true;
+			
 			synchronized(this){
 				this.wait();
 			}
@@ -62,6 +65,7 @@ public class TeleAssistanceCompositeService extends CompositeService {
 			if(this.choice == -2)
 				return this.pickTask();
 
+			this.workflowStarted = false;
 			System.out.println("User chose choice n°"+choice);
 			return this.choice;
 		} catch (InterruptedException e) {
@@ -90,5 +94,9 @@ public class TeleAssistanceCompositeService extends CompositeService {
 
 	public void setChoice(int choice){
 		this.choice = choice;
+	}
+	
+	public boolean isWorkflowStarted() {
+		return this.workflowStarted;
 	}
 }

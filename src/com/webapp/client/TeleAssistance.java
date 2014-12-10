@@ -141,6 +141,7 @@ public class TeleAssistance implements EntryPoint {
 	public static native void exportJSFunction()/*-{
 		$wnd.launchWorkflow = @com.webapp.client.TeleAssistance::launchWorkflow(*);
 		$wnd.sendTask = @com.webapp.client.TeleAssistance::sendTask(*);
+		$wnd.isWorkflowStarted = @com.webapp.client.TeleAssistance::isWorkflowStarted(*);
 	}-*/;
 
 	public static void sendTask(int choice){
@@ -148,6 +149,10 @@ public class TeleAssistance implements EntryPoint {
 	}
 	public static void launchWorkflow(int waitingTime) {
 		workflowService.createClient(waitingTime, clientCallback);
+	}
+	
+	public static void isWorkflowStarted() {
+		workflowService.isWorkflowStarted(workflowCallback);
 	}
 
 	static AsyncCallback<String> callback = new AsyncCallback<String>() {
@@ -191,6 +196,22 @@ public class TeleAssistance implements EntryPoint {
 		@Override
 		public void onSuccess(Boolean result) {
 			System.out.println("task picked and sent to workflow engine");
+		}
+
+	};
+	
+	static AsyncCallback<Boolean> workflowCallback = new AsyncCallback<Boolean>() {
+
+		@Override
+		public void onFailure(Throwable caught) {
+			System.out.println("Workflow callback failure");
+		}
+
+		@Override
+		public void onSuccess(Boolean result) {
+			if(result) {
+				workflowStarted();
+			}
 		}
 
 	};

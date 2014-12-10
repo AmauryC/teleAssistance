@@ -1,6 +1,7 @@
 package com.soa.service.atomic;
 
 import service.atomic.AtomicService;
+import service.auxiliary.ServiceOperation;
 
 public class AlarmService extends AtomicService {
 
@@ -8,4 +9,8 @@ public class AlarmService extends AtomicService {
 		super(serviceName, serviceEndpoint);
 	}
 
+	@ServiceOperation
+	public void triggerAlarm(int origin) {
+		System.out.println("CALLING EMERGENCY ... !");
+	}
 }

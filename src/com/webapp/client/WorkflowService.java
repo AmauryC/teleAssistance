@@ -11,4 +11,5 @@ public interface WorkflowService extends RemoteService {
 	String initialize();
 	boolean createClient(int waitingTime);
 	boolean sendTask(int choice);
+	boolean isWorkflowStarted();
 }

@@ -12,7 +12,7 @@ START [patientId]
 	analysis=-1
 	task=-2
 	
-	//WHILE (task != stop){
+	WHILE (task != stop){
 		task = this.pickTask()
 		
 		IF (task == analyze ) {
@@ -29,14 +29,14 @@ START [patientId]
 			}
 			
 			IF (analysis == sendAlarm) {
-				AlarmService.triggerAlarm()
+				AlarmService.triggerAlarm(1)
 			}
 		}
 		
 		IF (task == alert) {
-			AlarmService.triggerAlarm()
+			AlarmService.triggerAlarm(0)
 		}
 		
-	//}
+	}
 	
 RETURN true

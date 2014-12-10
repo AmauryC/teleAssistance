@@ -9,4 +9,5 @@ public interface WorkflowServiceAsync {
 	void initialize(AsyncCallback<String> callback);
 	void createClient(int waitingTime, AsyncCallback<Boolean> callback);
 	void sendTask(int choice, AsyncCallback<Boolean> callback);
+	void isWorkflowStarted(AsyncCallback<Boolean> callback);
 }
