@@ -47,9 +47,9 @@ public class DrugService extends AtomicService {
 		GraphicalDrugService drugService = new GraphicalDrugService("DrugService", "se.lnu.course4dv109.service.drug", impl);
 		
 		Map<String, Object> customProperties = drugService.getServiceDescription().getCustomProperties();
-		customProperties.put("Reliability", 0.03);
-		customProperties.put("Performance", 1.1);
-		customProperties.put("Cost", 4.1);
+		customProperties.put("Reliability", 0.0012);
+		customProperties.put("Performance", 0.0);
+		customProperties.put("Cost", 0.1);
 		
 		drugService.getServiceDescription().setResponseTime(2);
 		

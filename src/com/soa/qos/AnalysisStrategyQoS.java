@@ -14,9 +14,9 @@ public class AnalysisStrategyQoS extends AutomaticStrategyQoS {
 		HashMap<String, HashMap<String,Integer>> weights = new HashMap<String, HashMap<String,Integer>>();
 		
 		HashMap<String, Integer> alarmsW = new HashMap<String, Integer>();
-		alarmsW.put("Cost", 60);
+		alarmsW.put("Cost", 10);
 		alarmsW.put("Performance", 20);
-		alarmsW.put("Reliability", 20);
+		alarmsW.put("Reliability", 70);
 		weights.put("AlarmService", alarmsW);
 		
 		HashMap<String, Integer> labW = new HashMap<String, Integer>();

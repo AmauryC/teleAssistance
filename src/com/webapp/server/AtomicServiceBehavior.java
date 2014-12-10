@@ -26,9 +26,11 @@ public class AtomicServiceBehavior extends ExtraBehavior {
 		
 		Map<String, Object> customProperties = description.getCustomProperties();
 		if(customProperties.containsKey("Reliability")) {
-			int r = new Random().nextInt(100);
-			System.out.println("DRAW NUMBER " + r);
-			if(r < 20)
+			double failureRate = (double)customProperties.get("Reliability");
+			double r = new Random().nextDouble()*100;
+			
+			System.out.println("FAILURE ? " + r + " <= " + failureRate*100);
+			if(r <= failureRate*100)
 				return false;
 		}
 		
