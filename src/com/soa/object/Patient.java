@@ -54,16 +54,25 @@ public class Patient {
 		if(trend==0){
 			for(int i=0;i<50;i++){
 				data[i] = this.previousRate - i + ( rand.nextInt(31) -15) + evolution;
+				if(data[i]<0){
+					data[i]=0;
+				}
 			}
 		}
 		else if(trend==10){
 			for(int i=0;i<50;i++){
 				data[i] = this.previousRate + i + ( rand.nextInt(31) -15) + evolution;
+				if(data[i]<0){
+					data[i]=0;
+				}
 			}
 		}
 		else{
 			for(int i=0;i<50;i++){
 				data[i] = this.previousRate +( rand.nextInt(31) -15) + evolution;
+				if(data[i]<0){
+					data[i]=0;
+				}
 			}
 		}
 

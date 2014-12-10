@@ -1,8 +1,5 @@
 package com.soa.service.atomic;
 
-import java.util.Map;
-import java.util.Random;
-
 import com.soa.object.AnalysisResult;
 import com.soa.object.Decision;
 import com.soa.object.Drug;
@@ -26,18 +23,22 @@ public class MedicalAnalysisService extends AtomicService {
 		int first = healthReport.getHeartRate()[0];
 		int last = healthReport.getHeartRate()[49];
 		
-		if(true || last+normalVariation > 170 && last-normalVariation < 15){
+		if(last+normalVariation > 170 || last-normalVariation < 15){
+			System.out.println("ALARM BECAUSE : "+last+"+15"+">170 or "+last+"-15<15");
 			return new AnalysisResult(Decision.ALARM);
 		}
-		else if(last<=first+normalVariation && last>=first-normalVariation){
+		else if(last<=first+normalVariation && last>=first-normalVariation && last<normalRate+normalVariation && last>normalRate-normalVariation ){
 			//Everything is fine, let's do nothing
+			System.out.println("NOTHING BECAUSE : "+last+"<="+first+"+15 AND "+last+">="+first+"+-15");
+
 			return new AnalysisResult(Decision.NOTHING);
 		}
-		else if(first>last){
+		else if(first>last+15 && first>last-15 || last<normalRate-normalVariation){
+			System.out.println("DECREASING : "+first+">"+last);
 			//HeartRate decreases a lot (about 50 bpm), there is a risk
 			Drug drug = healthReport.getDrug();
 			if(drug == Drug.DRUG2 || drug == Drug.NONE){
-				double doses = (normalRate-last)/10;
+				double doses = (normalRate-last)/10.0;
 				if(drug == Drug.NONE){
 					return new AnalysisResult(Decision.CHANGE_DRUG, Drug.DRUG2, doses);
 				}
@@ -48,7 +49,7 @@ public class MedicalAnalysisService extends AtomicService {
 			//Case DRUG1
 			else {
 				double doses = healthReport.getDose();
-				double doseToChange = (normalRate-last)/10;
+				double doseToChange = (normalRate-last)/10.0;
 
 				if(doses< doseToChange){
 					return new AnalysisResult(Decision.CHANGE_DRUG, Drug.DRUG2, doseToChange-doses);
@@ -60,9 +61,10 @@ public class MedicalAnalysisService extends AtomicService {
 		}
 		else{
 			//If it increases, it is also a problem
+			System.out.println("ELSE : "+first+"-"+last);
 			Drug drug = healthReport.getDrug();
 			if(drug == Drug.DRUG1 || drug == Drug.NONE ){
-				double doses = (last-normalRate)/10;
+				double doses = (last-normalRate)/10.0;
 				if(drug == Drug.NONE){
 					return new AnalysisResult(Decision.CHANGE_DRUG, Drug.DRUG1, doses);
 				}
@@ -74,7 +76,7 @@ public class MedicalAnalysisService extends AtomicService {
 			//Case DRUG2
 			else {
 				double doses = healthReport.getDose();
-				double doseToChange = (last-normalRate)/10;
+				double doseToChange = (last-normalRate)/10.0;
 
 				if(doses< doseToChange){
 					return new AnalysisResult(Decision.CHANGE_DRUG, Drug.DRUG1, doseToChange-doses);
