@@ -35,7 +35,7 @@ public class AtomicServiceBehavior extends ExtraBehavior {
 		String[] tab;
 		switch(operationName){
 		case "analyzeData": 
-			tab = new String[51];
+			tab = new String[52];
 			HealthReport hr = (HealthReport)args[0];
 			tab[0] = drugToString(hr.getDrug());
 			tab[1] = ""+hr.getDose();
