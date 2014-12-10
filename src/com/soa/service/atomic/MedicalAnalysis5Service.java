@@ -2,7 +2,6 @@ package com.soa.service.atomic;
 
 import java.util.Map;
 
-import com.soa.service.atomic.graphical.GraphicalMedicalAnalysis5Service;
 import com.webapp.server.WorkflowServiceImpl;
 
 
@@ -15,8 +14,8 @@ public class MedicalAnalysis5Service extends MedicalAnalysisService {
 	
 
 
-	public static MedicalAnalysisService main(String[] args, WorkflowServiceImpl impl) {
-		GraphicalMedicalAnalysis5Service medicalAnalysisService = new GraphicalMedicalAnalysis5Service("MedicalAnalysisService", "se.lnu.course4dv109.service.medicalAnalysis5", impl);
+	public static MedicalAnalysisService main(String[] args) {
+		MedicalAnalysis5Service medicalAnalysisService = new MedicalAnalysis5Service("MedicalAnalysisService", "se.lnu.course4dv109.service.medicalAnalysis5");
 
 		Map<String, Object> customProperties = medicalAnalysisService.getServiceDescription().getCustomProperties();
 		customProperties.put("Reliability", 0.0005);

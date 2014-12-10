@@ -5,7 +5,6 @@ import java.util.Map;
 import com.soa.object.AnalysisResult;
 import com.soa.object.Drug;
 import com.soa.object.Patient;
-import com.soa.service.atomic.graphical.GraphicalDrugService;
 import com.webapp.server.WorkflowServiceImpl;
 
 import service.atomic.AtomicService;
@@ -43,8 +42,8 @@ public class DrugService extends AtomicService {
 	}
 
 
-	public static DrugService main(String[] args, WorkflowServiceImpl impl) {
-		GraphicalDrugService drugService = new GraphicalDrugService("DrugService", "se.lnu.course4dv109.service.drug", impl);
+	public static DrugService main(String[] args) {
+		DrugService drugService = new DrugService("DrugService", "se.lnu.course4dv109.service.drug");
 		
 		Map<String, Object> customProperties = drugService.getServiceDescription().getCustomProperties();
 		customProperties.put("Reliability", 0.0012);

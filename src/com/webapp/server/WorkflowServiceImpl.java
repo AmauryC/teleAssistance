@@ -46,23 +46,23 @@ WorkflowService, ServerMessageGeneratorService {
 			services[0] = TeleAssistanceServiceRegistry.start();
 			}
 		if(services[1] == null) {
-			services[1] = MedicalAnalysis1Service.main(args, this);
+			services[1] = MedicalAnalysis1Service.main(args);
 			((AtomicService) services[1]).setServiceBehavior(new AtomicServiceBehavior(this));
 		}
 		if(services[2] == null) {
-			services[2] = MedicalAnalysis2Service.main(args, this);
+			services[2] = MedicalAnalysis2Service.main(args);
 			((AtomicService) services[2]).setServiceBehavior(new AtomicServiceBehavior(this));
 		}
 		if(services[3] == null) {
-			services[3] = MedicalAnalysis3Service.main(args, this);
+			services[3] = MedicalAnalysis3Service.main(args);
 			((AtomicService) services[3]).setServiceBehavior(new AtomicServiceBehavior(this));		
 		}
 		if(services[4] == null) {
-			services[4] = MedicalAnalysis4Service.main(args, this);
+			services[4] = MedicalAnalysis4Service.main(args);
 			((AtomicService) services[4]).setServiceBehavior(new AtomicServiceBehavior(this));		
 		}
 		if(services[5] == null) {
-			services[5] = MedicalAnalysis5Service.main(args, this);
+			services[5] = MedicalAnalysis5Service.main(args);
 			((AtomicService) services[5]).setServiceBehavior(new AtomicServiceBehavior(this));
 		}
 		if(services[6] == null) {
@@ -78,12 +78,12 @@ WorkflowService, ServerMessageGeneratorService {
 			((AtomicService) services[8]).setServiceBehavior(new AtomicServiceBehavior(this));
 		}
 		if(services[9] == null){
-			services[9] = DrugService.main(args, this);
+			services[9] = DrugService.main(args);
 			((AtomicService) services[9]).setServiceBehavior(new AtomicServiceBehavior(this));
 		}
 		if(services[10] == null) {
 			String[] path = {getServletContext().getRealPath("tele_assistance-workflow.txt")};
-			CompositeService ta = TeleAssistanceCompositeService.main(path, this);
+			CompositeService ta = TeleAssistanceCompositeService.main(path);
 			ta.setProbe(new TeleAssistanceProbe(this));
 			services[10] = ta;
 		}

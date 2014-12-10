@@ -173,6 +173,8 @@ App.prototype.workflowStarted = function() {
 	for(var i = 0; i < disablers.length; i++) {
 		disablers[i].style.display = "none";
 	}
+	
+	document.getElementById("systemstopped").style.display = "none";
 };
 
 App.prototype.workflowEnded = function() {
@@ -180,6 +182,8 @@ App.prototype.workflowEnded = function() {
 	for(var i = 0; i < disablers.length; i++) {
 		disablers[i].style.display = "block";
 	}
+	
+	document.getElementById("systemstopped").style.display = "block";
 };
 
 App.prototype.printDrugData = function(array) {
