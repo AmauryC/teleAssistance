@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_1.dtd'><nta><declaration>// ###### GLOBAL ######
+// Description of number of entities
+const int 	NB_SERVICES = 3,
+		NB_LAB = 5,
+		NB_ALARM = 3,
+		NB_DRUG = 1,
+		NB_QOS = 3;
+
+// Constant to distinguish services
+const int	ALARM_SERVICE = 1, LAB_SERVICE = 2, DRUG_SERVICE = 3;
+
+// ############################
+// ##### MANAGING SYSTEM #######
+// ############################
+
+chan getServicesStatus,
+     setServicesStatus,
+     analysis,
+     planning,
+     execute,
+     selectLabWithStrategy,
+     selectAlarmWithStrategy;
+ 
+int  currentStatus[NB_SERVICES][2], // row -&gt; SERVICE_TYPE, SERVICE_ID, STATUS
+     currentServices[NB_SERVICES][NB_QOS+2], // row -&gt; SERVICE TYPE, SERVICE_ID, QOS1, QOS2, ..., QOSN
+     failureOccured;
+
+int  services[NB_SERVICES][NB_QOS+2],
+     status[NB_SERVICES][2],
+     failure;
+
+typedef struct {
+     int type;
+     int id;
+} ServiceDescription;
+
+typedef struct {
+     int failure;
+     ServiceDescription serviceFailed;
+     int status[NB_SERVICES][2];
+     int services[NB_SERVICES][NB_QOS+2];
+     int plan;
+} Knowledge;
+
+Knowledge k;
+
+// Plans
+const int SELECT_ALARM_STRATEGY = 1,
+          SELECT_LAB_STRATEGY = 2;
+
+// ############################
+// ##### MANAGED SYSTEM #######
+// ############################
+
+// Strategy to choose each service (execTime weight, cost weight, failure weight)
+//  - Lab
+//  - Alarm
+//  - Drug
+const int STRATEGY_DIRECT[NB_SERVICES][NB_QOS] = {
+	{33, 33, 33},
+	{30, 10, 60},
+	{33, 33, 33}
+};
+const int STRATEGY_LAB[NB_SERVICES][NB_QOS] = {
+	{10, 30, 60},
+	{20, 10, 70},
+	{33, 33, 33}
+};
+
+int[0,1] pick;
+int[0,3] analysisRes;
+
+int 	heartBeat = 0,
+	prevHeartBeat = 0,
+	drugDose,
+	drugId,
+	newDrugId;
+
+chan	retrieveData[NB_LAB],
+	callingEmergency[NB_ALARM];
+
+chan 	requestEmergency,
+	requestAnalysis,
+	shutdownSystem,
+	contactEmergency,
+	increaseDose,
+	decreaseDose,
+	newDrug,	
+	hasToChangeDrug,
+	hasToIncreaseDose,
+	hasToDecreaseDose,
+	isHealthy,
+	modifyMedication,
+	hasToModifyMedication,
+	emergencyCalled;
+
+bool normalized = false;
+
+// Qos (execTime in seconds, cost)
+int qosLab[NB_LAB][NB_QOS] = {
+	{22, 98,  1},
+	{27, 89,  1},
+	{31, 93,  2},
+	{29, 73,  3},
+	{20, 119, 5}
+};
+int qosLabN[NB_LAB][NB_QOS];
+
+int qosAlarm[NB_ALARM][NB_QOS] = {
+	{11, 41, 3},
+	{9,  25, 4},
+	{3,  68, 1}
+};
+int qosAlarmN[NB_ALARM][NB_QOS];
+
+int qosDrug[NB_DRUG][NB_QOS] = {
+	{0, 1, 2}
+};
+int qosDrugN[NB_DRUG][NB_QOS];
+
+void normalize() {
+	int 	minValue,
+		maxValue,
+		diff, i, j;
+
+	for(i = 0; i &lt; NB_QOS; i++) {
+		minValue = 10000;
+		maxValue = 0;
+
+		for(j = 0; j &lt; NB_ALARM; j++) {
+			if(qosAlarm[j][i] &lt; minValue)
+				minValue = qosAlarm[j][i];
+			if(qosAlarm[j][i] &gt; maxValue)
+				maxValue = qosAlarm[j][i];
+		}
+		for(j = 0; j &lt; NB_LAB; j++) {
+			if(qosLab[j][i] &lt; minValue)
+				minValue = qosLab[j][i];
+
+			if(qosLab[j][i] &gt; maxValue)
+				maxValue = qosLab[j][i];
+		}
+		for(j = 0; j &lt; NB_DRUG; j++) {
+			if(qosDrug[j][i] &lt; minValue)
+				minValue = qosDrug[j][i];
+
+			if(qosDrug[j][i] &gt; maxValue)
+				maxValue = qosDrug[j][i];
+		}
+
+		diff = maxValue - minValue;
+
+		for(j = 0; j &lt; NB_LAB; j++) {
+			qosLabN[j][i] = (qosLab[j][i] - minValue)*100/diff;
+		}
+		for(j = 0; j &lt; NB_ALARM; j++) {
+			qosAlarmN[j][i] = (qosAlarm[j][i] - minValue)*100/diff;
+		}
+		for(j = 0; j &lt; NB_DRUG; j++) {
+			qosDrugN[j][i] = (qosDrug[j][i] - minValue)*100/diff;
+		}
+	}
+
+	normalized = true;
+}
+
+// Select a service regarding a strategy
+int selectLabService(int strategy[NB_SERVICES][NB_QOS]) {
+	int 	optimalService,
+		optimalValue = 10000,
+		tempVal, i, j;
+
+	if(!normalized)
+		normalize();
+	
+	for(i = 0; i &lt; NB_LAB; i++) {
+		tempVal = 0;
+		for(j = 0; j &lt; NB_QOS; j++) {
+			tempVal += qosLabN[i][j]*strategy[0][j];
+		}
+
+		if(tempVal &lt; optimalValue) {
+			optimalValue = tempVal;
+			optimalService = i;
+		}
+	}
+
+	return optimalService;
+}
+
+// Same function
+int selectAlarmService(int strategy[NB_SERVICES][NB_QOS]) {
+	int 	optimalService,
+		optimalValue = 10000,
+		tempVal, i, j;
+
+	if(!normalized)
+		normalize();
+	
+	for(i = 0; i &lt; NB_ALARM; i++) {
+		tempVal = 0;
+		for(j = 0; j &lt; NB_QOS; j++) {
+			tempVal += qosAlarmN[i][j]*strategy[1][j];
+		}
+
+		if(tempVal &lt; optimalValue) {
+			optimalValue = tempVal;
+			optimalService = i;
+		}
+	}
+
+	return optimalService;
+}
+
+// Same function
+int selectDrugService(int strategy[NB_SERVICES][NB_QOS]) {
+	int 	optimalService,
+		optimalValue = 10000,
+		tempVal, i, j;
+	
+	if(!normalized)
+		normalize();
+
+	for(i = 0; i &lt; NB_DRUG; i++) {
+		tempVal = 0;
+		for(j = 0; j &lt; NB_QOS; j++) {
+			tempVal += qosDrugN[i][j]*strategy[2][j];
+		}
+
+		if(tempVal &lt; optimalValue) {
+			optimalValue = tempVal;
+			optimalService = i;
+		}
+	}
+
+	return optimalService;
+}</declaration><template><name x="5" y="5">TeleAssist</name><declaration>// Place local declarations here.
+
+// Variable containing the selected service according to a strategy
+int labChoice = 0, alarmChoice = 0, drugChoice = 0;
+int strategy[NB_SERVICES][NB_QOS];
+
+clock c;</declaration><location id="id0" x="-712" y="-32"><name x="-722" y="-62">failure</name></location><location id="id1" x="-712" y="-256"><name x="-736" y="-288">shutdown</name></location><location id="id2" x="-480" y="48"><name x="-528" y="56">callEmergency</name></location><location id="id3" x="200" y="-288"></location><location id="id4" x="-224" y="-168"><name x="-256" y="-200">gatherData</name></location><location id="id5" x="-480" y="-168"><name x="-504" y="-200">idle</name></location><location id="id6" x="200" y="-368"><name x="184" y="-400">drugModified</name></location><location id="id7" x="56" y="-168"><name x="-48" y="-192">analysisResult</name></location><location id="id8" x="-480" y="-32"><name x="-632" y="-72">EmergencyBeingCalled</name><label kind="invariant" x="-528" y="-56">c &lt;= 3</label><committed/></location><init ref="id5"/><transition><source ref="id0"/><target ref="id2"/><label kind="synchronisation" x="-696" y="48">requestEmergency?</label><nail x="-712" y="48"/></transition><transition><source ref="id8"/><target ref="id0"/><label kind="guard" x="-616" y="-48">c &gt;= 3</label></transition><transition><source ref="id2"/><target ref="id8"/><label kind="synchronisation" x="-664" y="8">callingEmergency[alarmChoice]!</label></transition><transition><source ref="id7"/><target ref="id2"/><label kind="synchronisation" x="-80" y="-24">contactEmergency?</label><label kind="assignment" x="-80" y="-8">alarmChoice =
+selectAlarmService(STRATEGY_LAB)</label><nail x="-40" y="48"/></transition><transition><source ref="id5"/><target ref="id2"/><label kind="synchronisation" x="-424" y="-88">requestEmergency?</label><label kind="assignment" x="-424" y="-72">alarmChoice =
+selectAlarmService(STRATEGY_DIRECT)</label><nail x="-424" y="-96"/><nail x="-424" y="-16"/></transition><transition><source ref="id3"/><target ref="id6"/><label kind="synchronisation" x="200" y="-344">modifyMedication!</label></transition><transition><source ref="id7"/><target ref="id3"/><label kind="synchronisation" x="120" y="-224">hasToModifyMedication?</label></transition><transition><source ref="id4"/><target ref="id7"/><label kind="synchronisation" x="-160" y="-168">retrieveData[labChoice]!</label><label kind="assignment" x="-160" y="-152">drugChoice =
+selectDrugService(STRATEGY_LAB)</label></transition><transition><source ref="id5"/><target ref="id4"/><label kind="synchronisation" x="-416" y="-184">requestAnalysis?</label><label kind="assignment" x="-416" y="-168">labChoice =
+selectLabService(STRATEGY_LAB)</label></transition><transition><source ref="id6"/><target ref="id5"/><nail x="-424" y="-368"/><nail x="-472" y="-200"/></transition><transition><source ref="id7"/><target ref="id5"/><label kind="synchronisation" x="-200" y="-248">isHealthy?</label><nail x="32" y="-232"/><nail x="-432" y="-232"/></transition><transition><source ref="id8"/><target ref="id5"/><label kind="synchronisation" x="-576" y="-144">emergencyCalled?</label></transition></template><template><name>User</name><location id="id9" x="-168" y="40"><name x="-192" y="56">shutdown</name></location><location id="id10" x="-168" y="-64"><name x="-178" y="-94">idle</name></location><init ref="id10"/><transition><source ref="id10"/><target ref="id10"/><label kind="select" x="-96" y="-88">v : int[1,200]</label><label kind="synchronisation" x="-96" y="-72">requestAnalysis!</label><label kind="assignment" x="-96" y="-56">heartBeat = v</label><nail x="-104" y="-104"/><nail x="-104" y="-16"/></transition><transition><source ref="id10"/><target ref="id10"/><label kind="synchronisation" x="-360" y="-80">requestEmergency!</label><nail x="-232" y="-112"/><nail x="-232" y="-16"/></transition></template><template><name>Lab</name><parameter>int id, int execTime, int cost</parameter><declaration>clock labClock;</declaration><location id="id11" x="-712" y="-352"><name x="-704" y="-376">processData</name></location><location id="id12" x="-976" y="-352"><name x="-1016" y="-368">idle</name></location><init ref="id12"/><transition><source ref="id11"/><target ref="id12"/><label kind="synchronisation" x="-904" y="-304">hasToModifyMedication!</label><nail x="-712" y="-288"/><nail x="-976" y="-288"/></transition><transition><source ref="id11"/><target ref="id12"/><label kind="synchronisation" x="-872" y="-488">contactEmergency!</label><nail x="-544" y="-352"/><nail x="-544" y="-472"/><nail x="-1064" y="-472"/></transition><transition><source ref="id11"/><target ref="id12"/><label kind="synchronisation" x="-888" y="-408">isHealthy!</label><nail x="-712" y="-408"/><nail x="-976" y="-408"/></transition><transition><source ref="id12"/><target ref="id11"/><label kind="synchronisation" x="-896" y="-368">retrieveData[id]?</label></transition></template><template><name>Drug</name><location id="id13" x="-464" y="-152"><name x="-448" y="-160">modifyingMedication</name></location><location id="id14" x="-608" y="-152"><name x="-618" y="-182">idle</name></location><init ref="id14"/><transition><source ref="id13"/><target ref="id14"/><nail x="-536" y="-184"/></transition><transition><source ref="id14"/><target ref="id13"/><label kind="synchronisation" x="-592" y="-120">modifyMedication?</label><nail x="-536" y="-120"/></transition></template><template><name>Alarm</name><parameter>int id, int failureRate</parameter><declaration>int failure;</declaration><location id="id15" x="-664" y="-168"></location><location id="id16" x="-896" y="-168"><name x="-906" y="-198">idle</name></location><init ref="id16"/><transition><source ref="id15"/><target ref="id16"/><label kind="guard" x="-832" y="-80">failure &lt;= failureRate</label><nail x="-776" y="-80"/></transition><transition><source ref="id15"/><target ref="id16"/><label kind="guard" x="-840" y="-280">failure &gt; failureRate</label><label kind="synchronisation" x="-840" y="-264">emergencyCalled!</label><nail x="-776" y="-248"/></transition><transition><source ref="id16"/><target ref="id15"/><label kind="select" x="-840" y="-168">f : int[0,100]</label><label kind="synchronisation" x="-840" y="-184">callingEmergency[id]?</label><label kind="assignment" x="-840" y="-152">failure = f</label></transition></template><template><name>Probe</name><location id="id17" x="68" y="0"><name x="17" y="-178">SendServicesStatus</name><committed/></location><location id="id18" x="-272" y="0"><name x="-306" y="-187">Waiting</name></location><init ref="id18"/><transition><source ref="id17"/><target ref="id18"/><label kind="synchronisation" x="-238" y="-144">setServicesStatus!</label><label kind="assignment" x="-238" y="-127">currentStatus = status,
+currentServices = services</label><nail x="68" y="-68"/><nail x="-272" y="-68"/></transition><transition><source ref="id18"/><target ref="id17"/><label kind="synchronisation" x="-170" y="-25">getServicesStatus?</label></transition></template><template><name>Effector</name><location id="id19" x="238" y="0"><name x="187" y="-187">ActionTaken</name><committed/></location><location id="id20" x="0" y="-34"><name x="-42" y="-76">ChangeLab</name><committed/></location><location id="id21" x="0" y="-102"><name x="-34" y="-153">ChangeAlarm</name><committed/></location><location id="id22" x="-238" y="0"><name x="-280" y="-178">Waiting</name></location><init ref="id22"/><transition><source ref="id20"/><target ref="id19"/><label kind="synchronisation" x="68" y="-59">requestEmergency!</label><nail x="204" y="-34"/></transition><transition><source ref="id21"/><target ref="id19"/><label kind="synchronisation" x="68" y="-127">requestEmergency!</label><nail x="238" y="-102"/></transition><transition><source ref="id19"/><target ref="id22"/><nail x="272" y="0"/><nail x="272" y="136"/><nail x="-272" y="136"/><nail x="-272" y="34"/></transition><transition><source ref="id22"/><target ref="id20"/><label kind="synchronisation" x="-195" y="-59">selectLabWithStrategy?</label><nail x="-204" y="-34"/></transition><transition><source ref="id22"/><target ref="id21"/><label kind="synchronisation" x="-200" y="-128">selectAlarmWithStrategy?</label><nail x="-238" y="-102"/></transition></template><template><name>Monitor</name><declaration>clock x;
+const int WAIT_TIME = 4;
+
+void updateKnowledge(){
+    k.status = currentStatus;
+    k.services = currentServices;
+}
+</declaration><location id="id23" x="-306" y="34"><name x="-348" y="-76">AnalysisRequired</name><committed/></location><location id="id24" x="-136" y="34"><name x="-187" y="-76">StartAnalysis</name><committed/></location><location id="id25" x="-442" y="34"><name x="-518" y="-76">RequestServicesStatus</name><committed/></location><location id="id26" x="-578" y="34"><name x="-603" y="-76">Waiting</name><label kind="invariant" x="-696" y="0">x &lt;= WAIT_TIME</label></location><init ref="id26"/><transition><source ref="id25"/><target ref="id23"/><label kind="synchronisation" x="-425" y="8">setServicesStatus?</label></transition><transition><source ref="id26"/><target ref="id25"/><label kind="guard" x="-561" y="-17">x == WAIT_TIME</label><label kind="synchronisation" x="-561" y="0">getServicesStatus!</label><label kind="assignment" x="-560" y="16">x = 0</label></transition><transition><source ref="id24"/><target ref="id26"/><nail x="-136" y="136"/><nail x="-578" y="136"/></transition><transition><source ref="id23"/><target ref="id24"/><label kind="synchronisation" x="-289" y="-8">analysis!</label><label kind="assignment" x="-289" y="8">updateKnowledge()</label></transition></template><template><name>Analyzer</name><declaration>bool adaptationNeeded;
+void analyze(){
+    int i;
+
+    for(i = 0; i &lt; NB_SERVICES; i++) {
+        if(k.status[i][2] == false) {
+	    k.failure = true;
+ 	    k.serviceFailed.type = k.status[i][0];
+ 	    k.serviceFailed.id = k.status[i][1];
+        }
+    }
+
+    adaptationNeeded = k.failure;
+}</declaration><location id="id27" x="-136" y="68"><name x="-212" y="8">NoAdaptationNeeded</name><committed/></location><location id="id28" x="-136" y="-68"><name x="-204" y="-136">AdaptationNeeded</name><committed/></location><location id="id29" x="-340" y="0"><name x="-391" y="-136">CheckAdaptation</name><committed/></location><location id="id30" x="-136" y="136"><name x="-178" y="102">StartAnalysis</name><committed/></location><location id="id31" x="68" y="0" color="#00ff00"><name x="59" y="-136">Waiting</name></location><init ref="id31"/><transition><source ref="id27"/><target ref="id31"/><nail x="68" y="68"/></transition><transition><source ref="id28"/><target ref="id31"/><label kind="synchronisation" x="-51" y="-93">planning!</label><nail x="68" y="-68"/></transition><transition><source ref="id29"/><target ref="id27"/><label kind="guard" x="-323" y="42">!adaptationNeeded</label><nail x="-340" y="68"/></transition><transition><source ref="id29"/><target ref="id28"/><label kind="guard" x="-323" y="-93">adaptationNeeded</label><nail x="-340" y="-68"/></transition><transition><source ref="id30"/><target ref="id29"/><label kind="assignment" x="-323" y="110">analyze()</label><nail x="-408" y="136"/><nail x="-408" y="0"/></transition><transition><source ref="id31"/><target ref="id30"/><label kind="synchronisation" x="-34" y="110">analysis?</label><nail x="136" y="0"/><nail x="136" y="136"/></transition></template><template><name>Planner</name><declaration>int serviceType;
+
+void addPlan(int plan){
+    k.plan = plan;
+}</declaration><location id="id32" x="204" y="238"><committed/></location><location id="id33" x="204" y="34"><committed/></location><location id="id34" x="818" y="134"><name x="767" y="-36">PlanCompleted</name><committed/></location><location id="id35" x="68" y="136"><name x="25" y="-34">StartPlanning</name><committed/></location><location id="id36" x="-72" y="136" color="#00ff00"><name x="-97" y="-34">Waiting</name></location><init ref="id36"/><transition><source ref="id32"/><target ref="id34"/><label kind="assignment" x="368" y="184">addPlan(SELECT_LAB_STRATEGY)</label></transition><transition><source ref="id33"/><target ref="id34"/><label kind="assignment" x="368" y="64">addPlan(SELECT_ALARM_STRATEGY)</label></transition><transition><source ref="id34"/><target ref="id36"/><label kind="synchronisation" x="221" y="280">execute!</label><nail x="920" y="134"/><nail x="920" y="304"/><nail x="-72" y="304"/></transition><transition><source ref="id35"/><target ref="id32"/><label kind="guard" x="-48" y="184">k.serviceFailed.type == LAB_SERVICE</label><nail x="136" y="187"/></transition><transition><source ref="id35"/><target ref="id33"/><label kind="guard" x="-72" y="56">k.serviceFailed.type == ALARM_SERVICE</label></transition><transition><source ref="id36"/><target ref="id35"/><label kind="synchronisation" x="-48" y="96">planning?</label></transition></template><template><name>Executor</name><declaration>int plan;
+
+void readPlan(){
+	plan = k.plan;
+}
+</declaration><location id="id37" x="340" y="-136"><name x="312" y="-184">NewLab</name><committed/></location><location id="id38" x="340" y="-204"><name x="312" y="-256">NewAlarm</name><committed/></location><location id="id39" x="102" y="-102"><name x="68" y="-272">ExecutePlan</name><committed/></location><location id="id40" x="578" y="-102"><name x="535" y="-272">PlanExecuted</name><committed/></location><location id="id41" x="-34" y="-102"><name x="-59" y="-272">Waiting</name></location><init ref="id41"/><transition><source ref="id37"/><target ref="id40"/><label kind="synchronisation" x="408" y="-161">selectLabWithStrategy!</label><nail x="544" y="-136"/></transition><transition><source ref="id38"/><target ref="id40"/><label kind="synchronisation" x="408" y="-229">selectAlarmWithStrategy!</label><nail x="578" y="-204"/></transition><transition><source ref="id39"/><target ref="id38"/><label kind="guard" x="178" y="-246">plan == 
+SELECT_ALARM_STRATEGY</label><nail x="102" y="-204"/></transition><transition><source ref="id39"/><target ref="id37"/><label kind="guard" x="178" y="-178">plan == 
+SELECT_LAB_STRATEGY</label><nail x="170" y="-136"/></transition><transition><source ref="id40"/><target ref="id41"/><nail x="646" y="-102"/><nail x="646" y="68"/><nail x="-34" y="68"/></transition><transition><source ref="id41"/><target ref="id39"/><label kind="synchronisation" x="0" y="-144">execute?</label><label kind="assignment" x="0" y="-127">readPlan()</label></transition></template><system>// Place template instantiations here.
+ta := TeleAssist();
+user := User();
+lab1 := Lab(0, 22, 98);
+lab2 := Lab(1, 27, 89);
+lab3 := Lab(2, 31, 93);
+lab4 := Lab(3, 29, 73);
+lab5 := Lab(4, 20, 119);
+alarm1 := Alarm(0, 3);
+alarm2 := Alarm(1, 1);
+alarm3 := Alarm(2, 10);
+drug := Drug();
+
+// List one or more processes to be composed into a system.
+system 	ta,
+	user,
+	lab1,
+	lab2,
+	lab3,
+	lab4,
+	lab5,
+	alarm1,
+	alarm2,
+	alarm3,
+	drug;</system></nta>
