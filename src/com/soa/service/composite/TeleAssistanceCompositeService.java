@@ -1,16 +1,15 @@
 package com.soa.service.composite;
 
+import activforms.engine.ActivFORMSEngine;
+
 import com.soa.object.AnalysisResult;
 import com.soa.object.Decision;
 import com.soa.object.HealthReport;
 import com.soa.object.Patient;
-import com.soa.qos.AnalysisStrategyQoS;
 import com.soa.qos.AutomaticStrategyQoS;
 import com.soa.qos.CostQoS;
-import com.soa.qos.DirectStrategyQoS;
 import com.soa.qos.PerformanceQoS;
 import com.soa.qos.ReliabilityQoS;
-import com.webapp.server.WorkflowServiceImpl;
 
 import service.auxiliary.LocalOperation;
 import service.composite.CompositeService;
@@ -21,11 +20,19 @@ public class TeleAssistanceCompositeService extends CompositeService {
 	private boolean workflowStarted;
 	private Patient patient;
 	private int choice=-2;
+	
+	private int[] serviceStats = new int[3];
 
 	public static TeleAssistanceCompositeService main(String[] args) {
 		TeleAssistanceCompositeService compositeService = new TeleAssistanceCompositeService(args[0]);
 		compositeService.start();
 
+		try {
+			ActivFORMSEngine engine = new ActivFORMSEngine(args[1], 9752);
+			engine.setRealTimeUnit(1000);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return compositeService;
 	}
 
@@ -97,5 +104,14 @@ public class TeleAssistanceCompositeService extends CompositeService {
 	
 	public boolean isWorkflowStarted() {
 		return this.workflowStarted;
+	}
+	
+	public int[] getServiceStats(){
+		return this.serviceStats;
+	}
+	public void updateServiceStats(int[] stats){
+		if(stats.length==3){
+			this.serviceStats=stats;
+		}
 	}
 }

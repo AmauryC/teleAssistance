@@ -25,6 +25,8 @@ public class TeleAssistanceProbe implements Probe {
 			String arg2, Object[] arg3) {
 		String[] parameters = {arg0.getServiceEndpoint()};
 		impl.updateClientUI(parameters, State.SERVICE_SUCCESSFUL);
+		int[] stats = {0,0,0};
+		impl.updateServicesStats(stats);
 		System.out.println("IT IS A SUCCESS");
 	}
 
@@ -33,6 +35,22 @@ public class TeleAssistanceProbe implements Probe {
 			Object[] arg2) {
 		System.out.println("IT IS A TIMEOUT");
 		String[] parameters = {arg0.getServiceEndpoint()};
+		
+		int[] stats = new int[3];
+		stats[0]=1;
+		if(parameters[0].contains("alarm")){
+			stats[1]=1;
+			stats[2]=Integer.valueOf((parameters[0].toCharArray()[parameters[0].length()]));
+		}
+		else if(parameters[0].contains("medicalAnalysis")){
+			stats[1]=2;
+			stats[2]=Integer.valueOf((parameters[0].toCharArray()[parameters[0].length()]));
+		}
+		else{
+			stats[1]=3;
+			stats[2]=0;
+		}
+		impl.updateServicesStats(stats);
 		impl.updateClientUI(parameters, State.SERVICE_TIMEOUT);
 	}
 

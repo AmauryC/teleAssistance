@@ -2,26 +2,32 @@ package com.soa.forms;
 
 import java.util.HashMap;
 
+import com.soa.service.composite.TeleAssistanceCompositeService;
+
 import activforms.engine.ActivFORMSEngine;
 import activforms.engine.Synchronizer;
 
 public class TeleAssistanceProbe extends Synchronizer{
 
 	private ActivFORMSEngine engine;
-	private int getFailureChannelId, setFailureChannelId;
+	private int getServiceStatusChannelId, setServiceStatusChannelId;
+	private TeleAssistanceCompositeService composite;
 	
-	public TeleAssistanceProbe(ActivFORMSEngine engine) {
+	public TeleAssistanceProbe(ActivFORMSEngine engine, TeleAssistanceCompositeService composite) {
 		this.engine = engine;
-		this.getFailureChannelId = engine.getChannelId("getFailure");
-		this.setFailureChannelId = engine.getChannelId("setFailure");
-		
-		engine.register(getFailureChannelId, this, "");
+		this.composite = composite;
+		this.getServiceStatusChannelId = engine.getChannelId("getServicesStatus");
+		this.setServiceStatusChannelId = engine.getChannelId("setServicesStatus");
+
+		engine.register(getServiceStatusChannelId, this, "");
 	}
 	@Override
 	public void receive(int channelId, HashMap<String, Object> arg1) {
 
-		if(channelId == getFailureChannelId){
-			engine.send(setFailureChannelId, "alarmFailureRate= ["+);
+		if(channelId == getServiceStatusChannelId){
+			engine.send(setServiceStatusChannelId, "currentFailure="+composite.getServiceStats()[0],
+												   "currentServiceFailed.type="+composite.getServiceStats()[1],
+												   "currentServiceFailed.id="+composite.getServiceStats()[2]);
 		}
 	}
 
