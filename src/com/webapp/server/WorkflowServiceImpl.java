@@ -133,7 +133,7 @@ WorkflowService, ServerMessageGeneratorService {
 	
 	public boolean isWorkflowStarted() {
 		TeleAssistanceCompositeService composite = ((TeleAssistanceCompositeService)services[10]);
-		return composite.isWorkflowStarted();
+		return composite!=null && composite.isWorkflowStarted();
 	}
 	
 	public void updateServicesStats(int[] stats){

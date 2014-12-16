@@ -1,6 +1,7 @@
 package com.soa.service.composite;
 
 import activforms.engine.ActivFORMSEngine;
+import activforms.gui.ActivFORMS;
 
 import com.soa.forms.TeleAssistanceProbe;
 import com.soa.object.AnalysisResult;
@@ -29,7 +30,9 @@ public class TeleAssistanceCompositeService extends CompositeService {
 		compositeService.start();
 
 		try {
-			ActivFORMSEngine engine = new ActivFORMSEngine(args[1], 9752);
+			ActivFORMSEngine engine = new ActivFORMSEngine(args[1], 9000);
+			//ActivFORMS activForms = new ActivFORMS();
+			//activForms.main(args);
 			engine.setRealTimeUnit(1000);
 			
 			TeleAssistanceProbe probe = new TeleAssistanceProbe(engine, compositeService);
