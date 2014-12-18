@@ -2,6 +2,7 @@ package com.soa.service.composite;
 
 import activforms.engine.ActivFORMSEngine;
 
+import com.soa.forms.TeleAssistanceEffector;
 import com.soa.forms.TeleAssistanceProbe;
 import com.soa.object.AnalysisResult;
 import com.soa.object.Decision;
@@ -11,6 +12,7 @@ import com.soa.qos.AutomaticStrategyQoS;
 import com.soa.qos.CostQoS;
 import com.soa.qos.PerformanceQoS;
 import com.soa.qos.ReliabilityQoS;
+import com.webapp.server.WorkflowServiceImpl;
 
 import service.auxiliary.LocalOperation;
 import service.composite.CompositeService;
@@ -28,7 +30,7 @@ public class TeleAssistanceCompositeService extends CompositeService {
 	private int strategy = -2;
 	
 
-	public static TeleAssistanceCompositeService main(String[] args) {
+	public static TeleAssistanceCompositeService main(String[] args, WorkflowServiceImpl impl) {
 		TeleAssistanceCompositeService compositeService = new TeleAssistanceCompositeService(args[0]);
 		compositeService.start();
 
@@ -38,7 +40,7 @@ public class TeleAssistanceCompositeService extends CompositeService {
 			engine.setCommittedLocationTime(1000);
 
 			TeleAssistanceProbe probe = new TeleAssistanceProbe(engine, compositeService);
-		
+			TeleAssistanceEffector effector = new TeleAssistanceEffector(engine, impl);
 			engine.start();
 			
 		} catch (Exception e) {
