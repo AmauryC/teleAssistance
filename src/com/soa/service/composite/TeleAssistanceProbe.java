@@ -40,11 +40,11 @@ public class TeleAssistanceProbe implements Probe {
 		stats[0]=1;
 		if(parameters[0].contains("alarm")){
 			stats[1]=1;
-			stats[2]=Integer.valueOf((parameters[0].toCharArray()[parameters[0].length()]));
+			stats[2]=Integer.valueOf((parameters[0].toCharArray()[parameters[0].length()-1]));
 		}
 		else if(parameters[0].contains("medicalAnalysis")){
 			stats[1]=2;
-			stats[2]=Integer.valueOf((parameters[0].toCharArray()[parameters[0].length()]));
+			stats[2]=Integer.valueOf((parameters[0].toCharArray()[parameters[0].length()-1]));
 		}
 		else{
 			stats[1]=3;

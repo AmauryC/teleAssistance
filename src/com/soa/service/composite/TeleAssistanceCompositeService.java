@@ -34,9 +34,12 @@ public class TeleAssistanceCompositeService extends CompositeService {
 			//ActivFORMS activForms = new ActivFORMS();
 			//activForms.main(args);
 			engine.setRealTimeUnit(1000);
+			engine.setCommittedLocationTime(1000);
 			
 			TeleAssistanceProbe probe = new TeleAssistanceProbe(engine, compositeService);
 		
+			engine.start();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -82,7 +82,10 @@ WorkflowService, ServerMessageGeneratorService {
 			((AtomicService) services[9]).setServiceBehavior(new AtomicServiceBehavior(this));
 		}
 		if(services[10] == null) {
-			String[] path = {getServletContext().getRealPath("tele_assistance-workflow.txt"),getServletContext().getRealPath("teleassist.xml")};
+			String[] path = {
+					getServletContext().getRealPath("tele_assistance-workflow.txt"),
+					getServletContext().getRealPath("teleassist.xml")
+			};
 			CompositeService ta = TeleAssistanceCompositeService.main(path);
 			ta.setProbe(new TeleAssistanceProbe(this));
 			services[10] = ta;

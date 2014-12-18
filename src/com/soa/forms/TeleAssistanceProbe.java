@@ -19,7 +19,7 @@ public class TeleAssistanceProbe extends Synchronizer{
 		this.getServiceStatusChannelId = engine.getChannelId("getServicesStatus");
 		this.setServiceStatusChannelId = engine.getChannelId("setServicesStatus");
 
-		engine.register(getServiceStatusChannelId, this, "");
+		engine.register(getServiceStatusChannelId, this, null);
 	}
 	@Override
 	public void receive(int channelId, HashMap<String, Object> arg1) {
