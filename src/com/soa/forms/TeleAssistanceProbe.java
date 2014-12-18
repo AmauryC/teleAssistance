@@ -27,7 +27,9 @@ public class TeleAssistanceProbe extends Synchronizer{
 		if(channelId == getServiceStatusChannelId){
 			engine.send(setServiceStatusChannelId, "currentFailure="+composite.getServiceStats()[0],
 												   "currentServiceFailed.type="+composite.getServiceStats()[1],
-												   "currentServiceFailed.id="+composite.getServiceStats()[2]);
+												   "currentServiceFailed.id="+composite.getServiceStats()[2],
+												   "currentTask="+composite.getChoice(),
+												   "emergency="+composite.isEmergency());
 		}
 	}
 

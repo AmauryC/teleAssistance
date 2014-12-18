@@ -119,6 +119,9 @@ WorkflowService, ServerMessageGeneratorService {
 		addEvent(UpdateUIEvent.SERVER_MESSAGE_DOMAIN, theEvent);
 	}
 
+	public TeleAssistanceCompositeService getCompositeService(){
+		return (TeleAssistanceCompositeService)this.services[10];
+	}
 	@Override
 	public synchronized void start() {
 		System.out.println("Workflow start ???");
