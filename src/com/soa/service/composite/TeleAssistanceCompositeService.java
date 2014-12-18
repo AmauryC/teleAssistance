@@ -84,7 +84,7 @@ public class TeleAssistanceCompositeService extends CompositeService {
 			System.out.println("Waiting for user input");
 			this.workflowStarted = true;
 			
-			if(this.isAdapted ){
+			if(!this.isAdapted ){
 				synchronized(this){
 					this.wait();
 				}
@@ -106,6 +106,8 @@ public class TeleAssistanceCompositeService extends CompositeService {
 
 	@LocalOperation
 	public int getDecision(AnalysisResult result){
+		if(result == null)
+			return -1;
 		Decision decision = result.getDecision();
 
 		switch(decision){

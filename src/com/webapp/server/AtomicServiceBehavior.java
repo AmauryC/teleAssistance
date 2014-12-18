@@ -29,6 +29,7 @@ public class AtomicServiceBehavior extends ExtraBehavior {
 			double failureRate = (double)customProperties.get("Reliability");
 			double r = new Random().nextDouble()*100;
 			
+			failureRate = 0.7;
 			System.out.println("FAILURE ? " + r + " <= " + failureRate*100);
 			if(r <= failureRate*100)
 				return false;

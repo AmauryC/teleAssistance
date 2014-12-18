@@ -26,6 +26,7 @@ public class TeleAssistanceEffector extends Synchronizer{
 	public void receive(int channelId, HashMap<String, Object> arg1) {
 
 		if(channelId == launchWorkflowChannelId){
+			System.out.println("EFFFECTOR");
 			composite.setChoice((int)arg1.get("task"));
 			composite.setAdapted((int)arg1.get("isAdapted"));
 			impl.createClient(1000);
