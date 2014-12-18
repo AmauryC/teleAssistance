@@ -12,12 +12,18 @@ START [patientId]
 	analysis=-1
 	task=-2
 	
+	//Selector for strategies
+	strategy=0
+	
+	
 	WHILE (task != stop){
 		task = this.pickTask()
 		
 		IF (task == analyze ) {
+			strategy = this.getStrategy(0)
+			
 			data = this.getVitalParameters()
-			analysisResult = MedicalAnalysisService.analyzeData(data)
+			analysisResult = MedicalAnalysisService.analyzeData(data, strategy)
 			analysis = this.getDecision(analysisResult)
 			
 			IF (analysis == changeDrug) {
@@ -29,12 +35,13 @@ START [patientId]
 			}
 			
 			IF (analysis == sendAlarm) {
-				AlarmService.triggerAlarm(1)
+				AlarmService.triggerAlarm(0)
 			}
 		}
 		
 		IF (task == alert) {
-			AlarmService.triggerAlarm(0)
+			strategy = this.getStrategy(-1)
+			AlarmService.triggerAlarm(strategy)
 		}
 		
 	}

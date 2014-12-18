@@ -1,7 +1,6 @@
 package com.soa.service.composite;
 
 import activforms.engine.ActivFORMSEngine;
-import activforms.gui.ActivFORMS;
 
 import com.soa.forms.TeleAssistanceProbe;
 import com.soa.object.AnalysisResult;
@@ -23,9 +22,11 @@ public class TeleAssistanceCompositeService extends CompositeService {
 	private Patient patient;
 	private int choice=-2;
 	
+	//Variables for self-adaptation. Parameters sent and taken from MAPE-K loop plans
 	private int[] serviceStats = new int[3];
-	private boolean emergency = false;
 	private boolean isAdapted = false;
+	private int strategy = -2;
+	
 
 	public static TeleAssistanceCompositeService main(String[] args) {
 		TeleAssistanceCompositeService compositeService = new TeleAssistanceCompositeService(args[0]);
@@ -53,14 +54,13 @@ public class TeleAssistanceCompositeService extends CompositeService {
 		this.workflowStarted = false;
 	}
 	
-	public TeleAssistanceCompositeService(String path, int task, boolean emergency) {
+	public TeleAssistanceCompositeService(String path, int task) {
 		super("TeleAssistance", "se.lnu.course4dv110", path);
 		this.pathToWorkflow = path;
 		this.patient = Patient.getInstance();
 		this.workflowStarted = false;
 		
 		this.choice = task;
-		this.emergency = emergency;
 	}
 
 	public void start() {
@@ -81,7 +81,6 @@ public class TeleAssistanceCompositeService extends CompositeService {
 	@LocalOperation
 	public int pickTask(){
 		try {
-			this.emergency=false;
 			System.out.println("Waiting for user input");
 			this.workflowStarted = true;
 			
@@ -117,13 +116,26 @@ public class TeleAssistanceCompositeService extends CompositeService {
 		case CHANGE_DOSES:
 			return 1;
 		case ALARM:
-			this.emergency  = true;
 			return 2;
 		default:
 			return -1;
 		}
 	}
 
+	@LocalOperation
+	public int getStrategy(int defaultValue){
+		int strat;
+		
+		if(this.strategy != -2){
+			strat = this.strategy ;
+		}
+		else{
+			strat = defaultValue;
+		}
+		this.strategy = -2;
+		
+		return strat;
+	}
 	public void setChoice(int choice){
 		this.choice = choice;
 	}
@@ -132,18 +144,7 @@ public class TeleAssistanceCompositeService extends CompositeService {
 		return this.choice;
 	}
 	
-	public boolean isEmergency(){
-		return this.emergency;
-	}
-	
-	public void setEmergency(int isEmergency){
-		if(isEmergency==1){
-			this.emergency = true;
-		}
-		else{
-			this.emergency = false;
-		}
-	}
+
 
 	public void setAdapted(int isAdapted){
 		if(isAdapted==1){

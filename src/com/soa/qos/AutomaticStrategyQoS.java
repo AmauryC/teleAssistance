@@ -17,11 +17,20 @@ public class AutomaticStrategyQoS implements AbstractQoSRequirement {
 		if(params.length > 0) {
 			try {
 				int context = (int)params[0];
-				if(context == 0) {
+				if(context < 0) {
 					strategy = new DirectStrategyQoS();
-				} else {
+				} else if(context==0) {
 					strategy = new AnalysisStrategyQoS();
 				}
+				else {
+					for(ServiceDescription service : serviceDescriptions){
+						if(service.getServiceEndpoint().endsWith(""+context)){
+							return service;
+						}
+					}
+					strategy = new AnalysisStrategyQoS();
+				}
+	
 			} catch(ClassCastException e) {
 				strategy = new AnalysisStrategyQoS();
 			}
