@@ -86,7 +86,7 @@ WorkflowService, ServerMessageGeneratorService {
 					getServletContext().getRealPath("tele_assistance-workflow.txt"),
 					getServletContext().getRealPath("teleassist.xml")
 			};
-			CompositeService ta = TeleAssistanceCompositeService.main(path);
+			CompositeService ta = TeleAssistanceCompositeService.main(path, this);
 			ta.setProbe(new TeleAssistanceProbe(this));
 			services[10] = ta;
 		}
