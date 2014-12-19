@@ -171,4 +171,8 @@ public class TeleAssistanceCompositeService extends CompositeService {
 			this.serviceStats=stats;
 		}
 	}
+	
+	public void resetServiceStats(){
+		this.serviceStats = new int[3];
+	}
 }

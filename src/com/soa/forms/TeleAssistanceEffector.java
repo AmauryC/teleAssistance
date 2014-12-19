@@ -29,6 +29,7 @@ public class TeleAssistanceEffector extends Synchronizer{
 			System.out.println("EFFFFFFFFFECTOR");
 			composite.setChoice((int)arg1.get("currentTask"));
 			composite.setAdapted(0);
+			composite.resetServiceStats();
 			impl.createClient(1000);
 		}
 	}
