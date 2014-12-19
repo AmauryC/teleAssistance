@@ -10,22 +10,28 @@ import activforms.engine.Synchronizer;
 
 public class TeleAssistanceEffector extends Synchronizer{
 
-	private int launchWorkflowChannelId;
+	private int labChannelId;
+	private int alarmChannelId;
+	private int drugChannelId;
 	private TeleAssistanceCompositeService composite;
 	private WorkflowServiceImpl impl;
 	
 	public TeleAssistanceEffector(ActivFORMSEngine engine, WorkflowServiceImpl impl) {
 		this.impl = impl;
 
-		this.launchWorkflowChannelId = engine.getChannelId("launchWorkflow");
+		this.labChannelId = engine.getChannelId("selectLabWithStrategy");
+		this.alarmChannelId = engine.getChannelId("selectAlarmWithStrategy");
+		this.drugChannelId = engine.getChannelId("selectDrugWithStrategy");
 	
-		engine.register(launchWorkflowChannelId, this, "currentTask");
+		engine.register(labChannelId, this, "currentTask", "strategy");
+		engine.register(alarmChannelId, this, "currentTask", "strategy");
+		engine.register(drugChannelId, this, "currentTask", "strategy");
 	}
 	@Override
 	public void receive(int channelId, HashMap<String, Object> arg1) {
 		this.composite = impl.getCompositeService();
 		
-		if(channelId == launchWorkflowChannelId){
+		if(channelId == labChannelId || channelId == alarmChannelId || channelId == drugChannelId){
 			System.out.println("EFFFFFFFFFECTOR");
 			impl.executePlan((int)arg1.get("currentTask"), (int)arg1.get("strategy"));
 		}

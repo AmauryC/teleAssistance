@@ -7,7 +7,7 @@ const int 	NB_SERVICES = 3,
 		NB_QOS = 3;
 
 // Constant to distinguish services
-const int	ALARM_SERVICE = 1, LAB_SERVICE = 2, DRUG_SERVICE = 3;
+const int	ALARM_SERVICE = 1, LAB_SERVICE = 0, DRUG_SERVICE = 2;
 
 // ############################
 // ##### MANAGING SYSTEM #######
@@ -25,7 +25,7 @@ typedef struct {
      int plan;
      int emergency;
      int pickedTask;
-     ServiceDescription serviceToPick;
+     int serviceToPick;
 } Knowledge;
 
 chan getServicesStatus,
@@ -35,12 +35,14 @@ chan getServicesStatus,
      execute,
      selectLabWithStrategy,
      selectAlarmWithStrategy,
+     selectDrugWithStrategy,
      launchWorkflow;
  
 int  currentServices[NB_SERVICES][NB_QOS+2], // row -&gt; SERVICE TYPE, SERVICE_ID, QOS1, QOS2, ..., QOSN
      currentFailure,
      currentTask,
-     emergency;
+     emergency,
+     strategy;
 
 int  services[NB_SERVICES][NB_QOS+2],
      failureOccured,
@@ -53,7 +55,8 @@ Knowledge k;
 
 // Plans
 const int SELECT_ALARM_STRATEGY = 1,
-          SELECT_LAB_STRATEGY = 2;
+          SELECT_LAB_STRATEGY = 2,
+          SELECT_DRUG_STRATEGY = 3;
 
 // ############################
 // ##### MANAGED SYSTEM #######
@@ -259,7 +262,7 @@ c = 0</label></transition><transition><source ref="id6"/><target ref="id5"/><nai
 currentFailure = failureOccured,
 currentServiceFailed = sFailed,
 emergency = isAnEmergency,
-currentTask = pickedTask</label><nail x="68" y="-68"/><nail x="-272" y="-68"/></transition><transition><source ref="id18"/><target ref="id17"/><label kind="synchronisation" x="-170" y="-25">getServicesStatus?</label></transition></template><template><name>Effector</name><declaration>ServiceDescription serviceChoice;</declaration><location id="id19" x="176" y="-32"><committed/></location><location id="id20" x="176" y="-104"><committed/></location><location id="id21" x="384" y="136"><name x="352" y="152">ActionTaken</name><committed/></location><location id="id22" x="0" y="-32"><name x="-42" y="-74">ChangeLab</name><committed/></location><location id="id23" x="0" y="-104"><name x="-34" y="-155">ChangeAlarm</name><committed/></location><location id="id24" x="-238" y="0"><name x="-280" y="-178">Waiting</name></location><init ref="id24"/><transition><source ref="id22"/><target ref="id19"/><label kind="synchronisation" x="28" y="-47">launchWorkflow!</label></transition><transition><source ref="id23"/><target ref="id20"/><label kind="synchronisation" x="28" y="-119">launchWorkflow!</label></transition><transition><source ref="id19"/><target ref="id21"/><label kind="synchronisation" x="232" y="-31">callingEmergency[serviceChoice.id]!</label><label kind="assignment" x="232" y="-16">serviceChoice = k.serviceToPick</label><nail x="336" y="-32"/></transition><transition><source ref="id20"/><target ref="id21"/><label kind="synchronisation" x="224" y="-144">callingEmergency[serviceChoice.id]!</label><label kind="assignment" x="224" y="-129">serviceChoice = k.serviceToPick</label><nail x="384" y="-104"/></transition><transition><source ref="id21"/><target ref="id24"/><nail x="-272" y="136"/><nail x="-272" y="34"/></transition><transition><source ref="id24"/><target ref="id22"/><label kind="synchronisation" x="-195" y="-59">selectLabWithStrategy?</label><nail x="-200" y="-32"/></transition><transition><source ref="id24"/><target ref="id23"/><label kind="synchronisation" x="-200" y="-128">selectAlarmWithStrategy?</label><nail x="-240" y="-104"/></transition></template><template><name>Monitor</name><declaration>clock x;
+currentTask = pickedTask</label><nail x="68" y="-68"/><nail x="-272" y="-68"/></transition><transition><source ref="id18"/><target ref="id17"/><label kind="synchronisation" x="-170" y="-25">getServicesStatus?</label></transition></template><template><name>Effector</name><declaration>int serviceChoice;</declaration><location id="id19" x="176" y="-32"><committed/></location><location id="id20" x="176" y="-104"><committed/></location><location id="id21" x="384" y="136"><name x="352" y="152">ActionTaken</name><committed/></location><location id="id22" x="0" y="-32"><name x="-42" y="-74">ChangeLab</name><committed/></location><location id="id23" x="0" y="-104"><name x="-34" y="-155">ChangeAlarm</name><committed/></location><location id="id24" x="-238" y="0"><name x="-280" y="-178">Waiting</name></location><init ref="id24"/><transition><source ref="id22"/><target ref="id19"/><label kind="synchronisation" x="32" y="-48">launchWorkflow!</label></transition><transition><source ref="id23"/><target ref="id20"/><label kind="synchronisation" x="28" y="-119">launchWorkflow!</label></transition><transition><source ref="id19"/><target ref="id21"/><label kind="synchronisation" x="232" y="-31">callingEmergency[serviceChoice]!</label><label kind="assignment" x="232" y="-16">serviceChoice = k.serviceToPick</label><nail x="336" y="-32"/></transition><transition><source ref="id20"/><target ref="id21"/><label kind="synchronisation" x="224" y="-144">callingEmergency[serviceChoice]!</label><label kind="assignment" x="224" y="-129">serviceChoice = k.serviceToPick</label><nail x="384" y="-104"/></transition><transition><source ref="id21"/><target ref="id24"/><nail x="-272" y="136"/><nail x="-272" y="34"/></transition><transition><source ref="id24"/><target ref="id22"/><label kind="synchronisation" x="-195" y="-59">selectLabWithStrategy?</label><nail x="-200" y="-32"/></transition><transition><source ref="id24"/><target ref="id23"/><label kind="synchronisation" x="-200" y="-128">selectAlarmWithStrategy?</label><nail x="-240" y="-104"/></transition></template><template><name>Monitor</name><declaration>clock x;
 const int WAIT_TIME = 4;
 
 void updateKnowledge(){
@@ -280,14 +283,19 @@ void addPlan(int plan){
 
 void selectServiceToPick(int plan) {
     addPlan(plan);
-}</declaration><location id="id34" x="204" y="238"><committed/></location><location id="id35" x="204" y="34"><committed/></location><location id="id36" x="818" y="134"><name x="767" y="-36">PlanCompleted</name><committed/></location><location id="id37" x="68" y="136"><name x="25" y="-34">StartPlanning</name><committed/></location><location id="id38" x="-72" y="136" color="#00ff00"><name x="-97" y="-34">Waiting</name></location><init ref="id38"/><transition><source ref="id34"/><target ref="id36"/><label kind="assignment" x="368" y="184">selectServiceToPick(SELECT_LAB_STRATEGY)</label></transition><transition><source ref="id35"/><target ref="id36"/><label kind="assignment" x="368" y="64">selectServiceToPick(SELECT_ALARM_STRATEGY)</label></transition><transition><source ref="id36"/><target ref="id38"/><label kind="synchronisation" x="221" y="280">execute!</label><nail x="920" y="134"/><nail x="920" y="304"/><nail x="-72" y="304"/></transition><transition><source ref="id37"/><target ref="id34"/><label kind="guard" x="-48" y="184">k.serviceFailed.type == LAB_SERVICE</label><nail x="136" y="187"/></transition><transition><source ref="id37"/><target ref="id35"/><label kind="guard" x="-72" y="56">k.serviceFailed.type == ALARM_SERVICE</label></transition><transition><source ref="id38"/><target ref="id37"/><label kind="synchronisation" x="-48" y="96">planning?</label></transition></template><template><name>Executor</name><declaration>int plan;
+}</declaration><location id="id34" x="288" y="136"><committed/></location><location id="id35" x="204" y="238"><committed/></location><location id="id36" x="204" y="34"><committed/></location><location id="id37" x="818" y="134"><name x="767" y="-36">PlanCompleted</name><committed/></location><location id="id38" x="68" y="136"><name x="25" y="-34">StartPlanning</name><committed/></location><location id="id39" x="-72" y="136" color="#00ff00"><name x="-97" y="-34">Waiting</name></location><init ref="id39"/><transition><source ref="id34"/><target ref="id37"/><label kind="assignment" x="328" y="120">selectServiceToPick(SELECT_DRUG_STRATEGY)</label></transition><transition><source ref="id38"/><target ref="id34"/><label kind="guard" x="120" y="120">k.serviceFailed.type ==
+DRUG_SERVICE</label></transition><transition><source ref="id35"/><target ref="id37"/><label kind="assignment" x="368" y="184">selectServiceToPick(SELECT_LAB_STRATEGY)</label></transition><transition><source ref="id36"/><target ref="id37"/><label kind="assignment" x="368" y="64">selectServiceToPick(SELECT_ALARM_STRATEGY)</label></transition><transition><source ref="id37"/><target ref="id39"/><label kind="synchronisation" x="221" y="280">execute!</label><nail x="920" y="134"/><nail x="920" y="304"/><nail x="-72" y="304"/></transition><transition><source ref="id38"/><target ref="id35"/><label kind="guard" x="-48" y="184">k.serviceFailed.type == LAB_SERVICE</label><nail x="136" y="187"/></transition><transition><source ref="id38"/><target ref="id36"/><label kind="guard" x="-72" y="56">k.serviceFailed.type == ALARM_SERVICE</label></transition><transition><source ref="id39"/><target ref="id38"/><label kind="synchronisation" x="-48" y="96">planning?</label></transition></template><template><name>Executor</name><declaration>int plan;
 
 void readPlan(){
 	plan = k.plan;
 }
-</declaration><location id="id39" x="340" y="-136"><name x="312" y="-184">NewLab</name><committed/></location><location id="id40" x="340" y="-204"><name x="312" y="-256">NewAlarm</name><committed/></location><location id="id41" x="102" y="-102"><name x="68" y="-272">ExecutePlan</name><committed/></location><location id="id42" x="578" y="-102"><name x="535" y="-272">PlanExecuted</name><committed/></location><location id="id43" x="-34" y="-102"><name x="-59" y="-272">Waiting</name></location><init ref="id43"/><transition><source ref="id39"/><target ref="id42"/><label kind="synchronisation" x="408" y="-161">selectLabWithStrategy!</label><nail x="544" y="-136"/></transition><transition><source ref="id40"/><target ref="id42"/><label kind="synchronisation" x="408" y="-229">selectAlarmWithStrategy!</label><nail x="578" y="-204"/></transition><transition><source ref="id41"/><target ref="id40"/><label kind="guard" x="178" y="-246">plan == 
-SELECT_ALARM_STRATEGY</label><nail x="102" y="-204"/></transition><transition><source ref="id41"/><target ref="id39"/><label kind="guard" x="178" y="-178">plan == 
-SELECT_LAB_STRATEGY</label><nail x="170" y="-136"/></transition><transition><source ref="id42"/><target ref="id43"/><nail x="646" y="-102"/><nail x="646" y="68"/><nail x="-34" y="68"/></transition><transition><source ref="id43"/><target ref="id41"/><label kind="synchronisation" x="0" y="-144">execute?</label><label kind="assignment" x="0" y="-127">readPlan()</label></transition></template><system>// Place template instantiations here.
+
+void chooseServiceToCall() {
+	k.serviceToPick = 1;
+}</declaration><location id="id40" x="344" y="-40"><committed/></location><location id="id41" x="340" y="-136"><name x="312" y="-184">NewLab</name><committed/></location><location id="id42" x="340" y="-204"><name x="312" y="-256">NewAlarm</name><committed/></location><location id="id43" x="102" y="-102"><name x="68" y="-272">ExecutePlan</name><committed/></location><location id="id44" x="578" y="-102"><name x="535" y="-272">PlanExecuted</name><committed/></location><location id="id45" x="-34" y="-102"><name x="-59" y="-272">Waiting</name></location><init ref="id45"/><transition><source ref="id40"/><target ref="id44"/><label kind="synchronisation" x="401" y="-86">selectDrugWithStrategy!</label><label kind="assignment" x="401" y="-71">strategy = k.serviceToPick</label><nail x="544" y="-40"/></transition><transition><source ref="id43"/><target ref="id40"/><label kind="guard" x="120" y="-70">plan == 
+SELECT_DRUG_STRATEGY</label><label kind="assignment" x="120" y="-40">chooseServiceToCall()</label><nail x="104" y="-40"/></transition><transition><source ref="id41"/><target ref="id44"/><label kind="synchronisation" x="392" y="-152">selectLabWithStrategy!</label><label kind="assignment" x="392" y="-136">strategy = k.serviceToPick</label><nail x="544" y="-136"/></transition><transition><source ref="id42"/><target ref="id44"/><label kind="synchronisation" x="400" y="-224">selectAlarmWithStrategy!</label><label kind="assignment" x="400" y="-208">strategy = k.serviceToPick</label><nail x="578" y="-204"/></transition><transition><source ref="id43"/><target ref="id42"/><label kind="guard" x="120" y="-240">plan == 
+SELECT_ALARM_STRATEGY</label><label kind="assignment" x="120" y="-208">chooseServiceToCall()</label><nail x="102" y="-204"/></transition><transition><source ref="id43"/><target ref="id41"/><label kind="guard" x="144" y="-168">plan == 
+SELECT_LAB_STRATEGY</label><label kind="assignment" x="144" y="-136">chooseServiceToCall()</label><nail x="170" y="-136"/></transition><transition><source ref="id44"/><target ref="id45"/><nail x="646" y="-102"/><nail x="646" y="68"/><nail x="-34" y="68"/></transition><transition><source ref="id45"/><target ref="id43"/><label kind="synchronisation" x="0" y="-144">execute?</label><label kind="assignment" x="0" y="-127">readPlan()</label></transition></template><system>// Place template instantiations here.
 ta = TeleAssist();
 user = User();
 lab1 = Lab(0, 22, 98);

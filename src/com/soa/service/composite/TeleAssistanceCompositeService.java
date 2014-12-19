@@ -37,7 +37,7 @@ public class TeleAssistanceCompositeService extends CompositeService {
 		try {
 			ActivFORMSEngine engine = new ActivFORMSEngine(args[1], 9000);
 			engine.setRealTimeUnit(1000);
-			engine.setCommittedLocationTime(1000);
+			//engine.setCommittedLocationTime(1000);
 
 			TeleAssistanceProbe probe = new TeleAssistanceProbe(engine, compositeService);
 			TeleAssistanceEffector effector = new TeleAssistanceEffector(engine, impl);

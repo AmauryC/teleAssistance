@@ -4,6 +4,7 @@ START [patientId]
 	stop = -1
 	analyze = 0
 	alert = 1
+	drug = 2
 	
 	//Constants to process medical analysis
 	changeDrug=0
@@ -42,6 +43,10 @@ START [patientId]
 		IF (task == alert) {
 			strategy = this.getStrategy(-1)
 			AlarmService.triggerAlarm(strategy)
+		}
+		
+		IF (task == drug) {
+			DrugService.changeDrug(analysisResult, patientId)
 		}
 		
 		this.resetNormalState()

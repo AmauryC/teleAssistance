@@ -43,11 +43,11 @@ public class TeleAssistanceProbe implements Probe {
 			stats[2]=Integer.valueOf((parameters[0].toCharArray()[parameters[0].length()-1]));
 		}
 		else if(parameters[0].contains("medicalAnalysis")){
-			stats[1]=2;
+			stats[1]=0;
 			stats[2]=Integer.valueOf((parameters[0].toCharArray()[parameters[0].length()-1]));
 		}
 		else{
-			stats[1]=3;
+			stats[1]=2;
 			stats[2]=0;
 		}
 		impl.updateServicesStats(stats);

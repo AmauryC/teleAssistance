@@ -25,10 +25,10 @@ public class TeleAssistanceProbe extends Synchronizer{
 	public void receive(int channelId, HashMap<String, Object> arg1) {
 
 		if(channelId == getServiceStatusChannelId){
+			System.out.println("PROBE : " + composite.getServiceStats()[0]);
 			engine.send(setServiceStatusChannelId, "currentFailure="+composite.getServiceStats()[0],
 												   "currentServiceFailed.type="+composite.getServiceStats()[1],
-												   "currentServiceFailed.id="+composite.getServiceStats()[2],
-												   "currentTask="+composite.getChoice()
+												   "currentServiceFailed.id="+composite.getServiceStats()[2]
 												   );
 		}
 	}

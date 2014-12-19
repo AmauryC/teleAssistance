@@ -16,7 +16,7 @@ public class AutomaticStrategyQoS implements AbstractQoSRequirement {
 		AutomaticStrategyQoS strategy;
 		if(params.length > 0) {
 			try {
-				int context = (int)params[0];
+				int context = (int)params[params.length-1];
 				if(context < 0) {
 					strategy = new DirectStrategyQoS();
 				} else if(context==0) {
