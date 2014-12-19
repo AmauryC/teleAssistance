@@ -1,5 +1,6 @@
 package com.soa.service.composite;
 
+import com.soa.object.AnalysisResult;
 import com.webapp.client.event.State;
 import com.webapp.server.WorkflowServiceImpl;
 
@@ -47,8 +48,11 @@ public class TeleAssistanceProbe implements Probe {
 			stats[2]=Integer.valueOf((parameters[0].toCharArray()[parameters[0].length()-1]));
 		}
 		else{
+			
+			AnalysisResult ar = (AnalysisResult)arg2[0];
 			stats[1]=2;
 			stats[2]=0;
+			impl.getCompositeService().updateMedication(ar);
 		}
 		impl.updateServicesStats(stats);
 		impl.updateClientUI(parameters, State.SERVICE_TIMEOUT);

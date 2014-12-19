@@ -28,6 +28,7 @@ public class TeleAssistanceCompositeService extends CompositeService {
 	private int[] serviceStats = new int[3];
 	private boolean isAdapted = false;
 	private int strategy = -2;
+	private AnalysisResult analysisResult;
 	
 
 	public static TeleAssistanceCompositeService main(String[] args, WorkflowServiceImpl impl) {
@@ -183,5 +184,14 @@ public class TeleAssistanceCompositeService extends CompositeService {
 	public void resetNormalState(){
 		this.isAdapted = false;
 		this.strategy = -2;
+	}
+	
+	public void updateMedication(AnalysisResult ar) {
+		this.analysisResult = ar;
+	}
+	
+	@LocalOperation
+	public AnalysisResult getAnalysisResult(){
+		return this.analysisResult;
 	}
 }

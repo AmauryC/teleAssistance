@@ -2,6 +2,7 @@ package com.soa.forms;
 
 import java.util.HashMap;
 
+import com.soa.object.AnalysisResult;
 import com.soa.service.composite.TeleAssistanceCompositeService;
 import com.webapp.server.WorkflowServiceImpl;
 

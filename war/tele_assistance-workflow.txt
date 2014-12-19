@@ -46,7 +46,16 @@ START [patientId]
 		}
 		
 		IF (task == drug) {
-			DrugService.changeDrug(analysisResult, patientId)
+			analysisResult = this.getAnalysisResult();
+			analysis = this.getDecision(analysisResult)
+			
+			IF(analysis == changeDrug){
+				DrugService.changeDrug(analysisResult, patientId)
+			}
+			ELSE{
+				DrugService.changeDoses(analysisResult, patientId)		
+			}
+		
 		}
 		
 		this.resetNormalState()

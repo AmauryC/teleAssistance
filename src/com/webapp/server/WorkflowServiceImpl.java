@@ -6,6 +6,7 @@ import service.atomic.AtomicService;
 import service.provider.AbstractService;
 
 import com.soa.client.Client;
+import com.soa.object.AnalysisResult;
 import com.soa.service.atomic.Alarm3Service;
 import com.soa.service.atomic.Alarm1Service;
 import com.soa.service.atomic.Alarm2Service;
@@ -37,6 +38,7 @@ WorkflowService, ServerMessageGeneratorService {
 
 	public String result;
 	public int waitingTime = 1000;
+
 
 	@Override
 	public String initialize() {
