@@ -145,4 +145,13 @@ WorkflowService, ServerMessageGeneratorService {
 	public void updateServicesStats(int[] stats){
 		((TeleAssistanceCompositeService) services[10]).updateServiceStats(stats);
 	}
+	
+	public void executePlan(int task, int strategy){
+		TeleAssistanceCompositeService composite = ((TeleAssistanceCompositeService)services[10]);
+		composite.setChoice(task);
+		composite.setStrategy(strategy);
+		composite.setAdapted(1);
+		composite.resetServiceStats();
+		this.createClient(1000);
+	}
 }

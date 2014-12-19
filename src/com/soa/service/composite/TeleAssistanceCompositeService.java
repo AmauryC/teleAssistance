@@ -140,6 +140,11 @@ public class TeleAssistanceCompositeService extends CompositeService {
 		
 		return strat;
 	}
+	
+	public void setStrategy(int strategy){
+		this.strategy = strategy;
+	}
+	
 	public void setChoice(int choice){
 		this.choice = choice;
 	}
@@ -148,8 +153,6 @@ public class TeleAssistanceCompositeService extends CompositeService {
 		return this.choice;
 	}
 	
-
-
 	public void setAdapted(int isAdapted){
 		if(isAdapted==1){
 			this.isAdapted = true;
@@ -174,5 +177,11 @@ public class TeleAssistanceCompositeService extends CompositeService {
 	
 	public void resetServiceStats(){
 		this.serviceStats = new int[3];
+	}
+	
+	@LocalOperation
+	public void resetNormalState(){
+		this.isAdapted = false;
+		this.strategy = -2;
 	}
 }

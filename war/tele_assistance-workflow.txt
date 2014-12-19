@@ -44,6 +44,7 @@ START [patientId]
 			AlarmService.triggerAlarm(strategy)
 		}
 		
+		this.resetNormalState()
 	}
 	
 RETURN true
