@@ -165,7 +165,7 @@ App.prototype.serviceInvoked = function(description) {
 
 App.prototype.serviceTimeout = function(description) {
 	this.addInvokePoint(description, 0);
-	app.initiateSequence();
+	//app.initiateSequence();
 };
 
 App.prototype.workflowStarted = function() {

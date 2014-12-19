@@ -16,7 +16,7 @@ public class MedicalAnalysisService extends AtomicService {
 	}
 	
 	@ServiceOperation
-	public AnalysisResult analyzeData(HealthReport healthReport) {
+	public AnalysisResult analyzeData(HealthReport healthReport, int strategy) {
 		int normalRate = Patient.NORMAL_HEART_RATE;
 		int normalVariation = Patient.NORMAL_RATE_VARIATION;
 		

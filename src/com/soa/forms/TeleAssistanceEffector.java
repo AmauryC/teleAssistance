@@ -16,19 +16,19 @@ public class TeleAssistanceEffector extends Synchronizer{
 	
 	public TeleAssistanceEffector(ActivFORMSEngine engine, WorkflowServiceImpl impl) {
 		this.impl = impl;
-		this.composite = impl.getCompositeService();
 
 		this.launchWorkflowChannelId = engine.getChannelId("launchWorkflow");
 	
-		engine.register(launchWorkflowChannelId, this);
+		engine.register(launchWorkflowChannelId, this, "currentTask");
 	}
 	@Override
 	public void receive(int channelId, HashMap<String, Object> arg1) {
-
+		this.composite = impl.getCompositeService();
+		
 		if(channelId == launchWorkflowChannelId){
-			System.out.println("EFFFECTOR");
-			composite.setChoice((int)arg1.get("task"));
-			composite.setAdapted((int)arg1.get("isAdapted"));
+			System.out.println("EFFFFFFFFFECTOR");
+			composite.setChoice((int)arg1.get("currentTask"));
+			composite.setAdapted(0);
 			impl.createClient(1000);
 		}
 	}
