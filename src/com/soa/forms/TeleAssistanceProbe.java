@@ -33,13 +33,4 @@ public class TeleAssistanceProbe extends Synchronizer{
 												   );
 		}
 	}
-
-	private String drugToString(Drug drug){
-		if(drug==Drug.DRUG1){
-			return "Drug n°1";
-		}
-		else{
-			return "Drug n°2";
-		}
-	}
 }
