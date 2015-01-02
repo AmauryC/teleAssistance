@@ -5,6 +5,7 @@ import java.util.Map;
 import com.soa.object.AnalysisResult;
 import com.soa.object.Drug;
 import com.soa.object.Patient;
+import com.soa.service.composite.ServiceFailureData;
 import com.webapp.server.WorkflowServiceImpl;
 
 import service.atomic.AtomicService;
@@ -43,12 +44,18 @@ public class DrugService extends AtomicService {
 
 
 	public static DrugService main(String[] args) {
-		DrugService drugService = new DrugService("DrugService", "se.lnu.course4dv109.service.drug");
+		String serviceName = "se.lnu.course4dv109.service.drug";
+		double reliability = 0.02;
+		
+		DrugService drugService = new DrugService("DrugService", serviceName);
 		
 		Map<String, Object> customProperties = drugService.getServiceDescription().getCustomProperties();
-		customProperties.put("Reliability", 0.0012);
+		customProperties.put("Reliability", reliability);
 		customProperties.put("Performance", 0.0);
 		customProperties.put("Cost", 0.1);
+		
+		int[] temp = {((int)reliability*100), 100};
+		ServiceFailureData.setStats(serviceName, temp);
 		
 		drugService.getServiceDescription().setResponseTime(2);
 		

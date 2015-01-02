@@ -2,6 +2,7 @@ package com.soa.service.atomic;
 
 import java.util.Map;
 
+import com.soa.service.composite.ServiceFailureData;
 import com.webapp.server.WorkflowServiceImpl;
 
 public class MedicalAnalysis4Service extends MedicalAnalysisService {
@@ -11,12 +12,17 @@ public class MedicalAnalysis4Service extends MedicalAnalysisService {
 	}
 
 	public static MedicalAnalysisService main(String[] args) {
-		MedicalAnalysis4Service medicalAnalysisService = new MedicalAnalysis4Service("MedicalAnalysisService", "se.lnu.course4dv109.service.medicalAnalysis4");
-
+		String serviceName="se.lnu.course4dv109.service.medicalAnalysis4";
+		double reliability = 0.03;
+		
+		MedicalAnalysisService medicalAnalysisService = new MedicalAnalysis4Service("MedicalAnalysisService", serviceName);
 		Map<String, Object> customProperties = medicalAnalysisService.getServiceDescription().getCustomProperties();
-		customProperties.put("Reliability", 0.0025);
+		customProperties.put("Reliability", reliability);
 		customProperties.put("Performance", 2.9);
 		customProperties.put("Cost", 7.3);
+		
+		int[] temp = {((int)reliability*100), 100};
+		ServiceFailureData.setStats(serviceName, temp);
 		
 		medicalAnalysisService.getServiceDescription().setResponseTime(3);
 		
