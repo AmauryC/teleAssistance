@@ -15,26 +15,29 @@ public class TeleAssistanceProbe implements Probe {
 	}
 
 	@Override
-	public void serviceOperationInvoked(ServiceDescription arg0, String arg1,
-			Object[] arg2) {
+	public void serviceOperationInvoked(ServiceDescription arg0, String arg1, Object[] arg2) {
 		String[] parameters = {arg0.getServiceEndpoint()};
 		impl.updateClientUI(parameters, State.SERVICE_INVOKED);
 	}
 
 	@Override
-	public void serviceOperationReturned(ServiceDescription arg0, Object arg1,
-			String arg2, Object[] arg3) {
+	public void serviceOperationReturned(ServiceDescription arg0, Object arg1, String arg2, Object[] arg3) {
 		String[] parameters = {arg0.getServiceEndpoint()};
 		impl.updateClientUI(parameters, State.SERVICE_SUCCESSFUL);
 		int[] stats = {0,0,0};
 		impl.updateServicesStats(stats);
+		
+		ServiceFailureData.updateStats(arg0.getServiceEndpoint(), false);
+		
 		System.out.println("IT IS A SUCCESS");
 	}
 
 	@Override
-	public void serviceOperationTimeout(ServiceDescription arg0, String arg1,
-			Object[] arg2) {
+	public void serviceOperationTimeout(ServiceDescription arg0, String arg1, Object[] arg2) {
 		System.out.println("IT IS A TIMEOUT");
+		
+		ServiceFailureData.updateStats(arg0.getServiceEndpoint(), true);
+		
 		String[] parameters = {arg0.getServiceEndpoint()};
 		
 		int[] stats = new int[3];

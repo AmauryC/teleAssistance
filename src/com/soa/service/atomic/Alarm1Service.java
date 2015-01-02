@@ -2,6 +2,7 @@ package com.soa.service.atomic;
 
 import java.util.Map;
 
+import com.soa.service.composite.ServiceFailureData;
 import com.webapp.server.WorkflowServiceImpl;
 
 import service.auxiliary.ServiceOperation;
@@ -13,12 +14,18 @@ public class Alarm1Service extends AlarmService {
 	}
 
 	public static AlarmService main(String[] args) {
-		AlarmService alarmService = new Alarm1Service("AlarmService", "se.lnu.course4dv109.service.alarm1");
-
+		String serviceName="se.lnu.course4dv109.service.alarm1";
+		double reliability = 0.03;
+		
+		AlarmService alarmService = new Alarm1Service("AlarmService", serviceName);
 		Map<String, Object> customProperties = alarmService.getServiceDescription().getCustomProperties();
-		customProperties.put("Reliability", 0.03);
+		
+		customProperties.put("Reliability", reliability);
 		customProperties.put("Performance", 1.1);
 		customProperties.put("Cost", 4.1);
+		
+		int[] temp = {((int)reliability*100), 100};
+		ServiceFailureData.setStats(serviceName, temp);
 		
 		alarmService.getServiceDescription().setResponseTime(2);
 		
