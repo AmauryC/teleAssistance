@@ -22,7 +22,7 @@ public class MedicalAnalysis5Service extends MedicalAnalysisService {
 		customProperties.put("Performance", 2.0);
 		customProperties.put("Cost", 11.9);
 		
-		int[] temp = {((int)reliability*100), 100};
+		int[] temp = {((int)(reliability*100.0)), 100};
 		ServiceFailureData.setStats(serviceName, temp);
 		
 		medicalAnalysisService.getServiceDescription().setResponseTime(2);

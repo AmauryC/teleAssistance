@@ -21,7 +21,7 @@ public class MedicalAnalysis2Service extends MedicalAnalysisService {
 		customProperties.put("Performance", 2.7);
 		customProperties.put("Cost", 8.9);
 		
-		int[] temp = {((int)reliability*100), 100};
+		int[] temp = {((int)(reliability*100.0)), 100};
 		ServiceFailureData.setStats(serviceName, temp);
 		
 		medicalAnalysisService.getServiceDescription().setResponseTime(3);

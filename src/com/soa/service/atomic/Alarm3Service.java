@@ -24,7 +24,7 @@ public class Alarm3Service extends AlarmService {
 		customProperties.put("Performance", 0.3);
 		customProperties.put("Cost", 6.8);
 		
-		int[] temp = {((int)reliability*100), 100};
+		int[] temp = {((int)(reliability*100.0)), 100};
 		ServiceFailureData.setStats(serviceName, temp);
 		
 		alarmService.getServiceDescription().setResponseTime(1);

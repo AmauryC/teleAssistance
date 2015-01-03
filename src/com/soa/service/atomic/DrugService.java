@@ -54,7 +54,7 @@ public class DrugService extends AtomicService {
 		customProperties.put("Performance", 0.0);
 		customProperties.put("Cost", 0.1);
 		
-		int[] temp = {((int)reliability*100), 100};
+		int[] temp = {((int)(reliability*100.0)), 100};
 		ServiceFailureData.setStats(serviceName, temp);
 		
 		drugService.getServiceDescription().setResponseTime(2);
