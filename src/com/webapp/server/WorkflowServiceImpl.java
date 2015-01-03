@@ -86,8 +86,10 @@ WorkflowService, ServerMessageGeneratorService {
 		if(services[10] == null) {
 			String[] path = {
 					getServletContext().getRealPath("tele_assistance-workflow.txt"),
-					getServletContext().getRealPath("teleassist.xml")
+					getServletContext().getRealPath("teleassist.xml"), 
+					getServletContext().getRealPath("teleassist.correction.xml")
 			};
+			
 			CompositeService ta = TeleAssistanceCompositeService.main(path, this);
 			ta.setProbe(new TeleAssistanceProbe(this));
 			services[10] = ta;
@@ -155,5 +157,9 @@ WorkflowService, ServerMessageGeneratorService {
 		composite.setAdapted(1);
 		composite.resetServiceStats();
 		this.createClient(1000);
+	}
+	
+	public AbstractService[] getServices(){
+		return this.services;
 	}
 }

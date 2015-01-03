@@ -19,6 +19,7 @@ public class MedicalAnalysis1Service extends MedicalAnalysisService {
 		MedicalAnalysis1Service medicalAnalysisService = new MedicalAnalysis1Service("MedicalAnalysisService", serviceName);
 
 		Map<String, Object> customProperties = medicalAnalysisService.getServiceDescription().getCustomProperties();
+		
 		customProperties.put("Reliability", reliability);
 		customProperties.put("Performance", 2.2);
 		customProperties.put("Cost", 9.8);

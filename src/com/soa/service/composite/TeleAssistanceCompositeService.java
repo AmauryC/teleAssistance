@@ -1,6 +1,8 @@
 package com.soa.service.composite;
 
 import activforms.engine.ActivFORMSEngine;
+import activforms.goalmanagement.Goal;
+import activforms.goalmanagement.goalmanager.GoalManager;
 
 import com.soa.forms.TeleAssistanceEffector;
 import com.soa.forms.TeleAssistanceProbe;
@@ -36,12 +38,25 @@ public class TeleAssistanceCompositeService extends CompositeService {
 		compositeService.start();
 
 		try {
-			ActivFORMSEngine engine = new ActivFORMSEngine(args[1], 9000);
+			ActivFORMSEngine engine = new ActivFORMSEngine("adapation", args[1], 9000);
 			engine.setRealTimeUnit(1000);
-			//engine.setCommittedLocationTime(1000);
 
 			TeleAssistanceProbe probe = new TeleAssistanceProbe(engine, compositeService);
 			TeleAssistanceEffector effector = new TeleAssistanceEffector(engine, impl);
+			
+			//Decision tree
+			GoalManager goalManager = engine.getGoalManager();
+			goalManager.addModelFromFile("adaptation", args[1]);
+			goalManager.addModelFromFile("correction", args[2]);
+			
+			Goal topGoal = new Goal("Top Goal", "");
+			topGoal.addSubGoal(new Goal("adaptation", "correctModel == false"));
+			topGoal.addSubGoal(new Goal("correction", "correctModel == true"));
+
+			goalManager.addGoal(topGoal);
+			//---------------------------
+			
+			
 			engine.start();
 			
 		} catch (Exception e) {
