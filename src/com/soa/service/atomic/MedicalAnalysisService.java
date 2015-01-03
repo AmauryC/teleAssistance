@@ -15,6 +15,10 @@ public class MedicalAnalysisService extends AtomicService {
 		super(serviceName, serviceEndpoint);
 	}
 	
+	public void updateReliability(double reliability){
+		this.getServiceDescription().getCustomProperties().put("Reliability", reliability);
+	}
+	
 	@ServiceOperation
 	public AnalysisResult analyzeData(HealthReport healthReport, int strategy) {
 		int normalRate = Patient.NORMAL_HEART_RATE;
