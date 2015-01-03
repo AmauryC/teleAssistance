@@ -30,19 +30,17 @@ public class TeleAssistanceProbe extends Synchronizer{
 		int[] temp;
 		for(int i=0;i<3; i++){
 			temp = ServiceFailureData.getStats("se.lnu.course4dv109.service.alarm"+(i+1));
-			failureRate[i] = ((temp[0]/temp[1])*10000);
+			failureRate[i] = (int)(((double)temp[0]/(double)temp[1])*10000);
 		}
 		for(int i=0; i<5;i++){
 			temp = ServiceFailureData.getStats("se.lnu.course4dv109.service.medicalAnalysis"+(i+1));
 			failureRate[i+3] = (int)(((double)temp[0]/(double)temp[1])*10000);
-			System.out.println("" + failureRate[i+3] + " -- " + temp[0] + " - " + temp[0]);
 		}
 
 		temp = ServiceFailureData.getStats("se.lnu.course4dv109.service.drug");
-		failureRate[8] = ((temp[0]/temp[1])*10000);
+		failureRate[8] = (int)(((double)temp[0]/(double)temp[1])*10000);
 
 		if(channelId == getServiceStatusChannelId){
-			System.out.println("PROBE : " + composite.getServiceStats()[0]);
 			engine.send(setServiceStatusChannelId, 
 					"currentFailure="+composite.getServiceStats()[0],
 					"currentServiceFailed.type="+composite.getServiceStats()[1],

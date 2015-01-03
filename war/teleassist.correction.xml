@@ -9,7 +9,7 @@ const int 	NB_SERVICES = 3,
 // Constant to distinguish services
 const int	ALARM_SERVICE = 1, LAB_SERVICE = 0, DRUG_SERVICE = 2;
 
-const int FAILURE_THRESHOLD = 3;
+const int FAILURE_THRESHOLD = 20;
 
 // ############################
 // ##### MANAGING SYSTEM #######
@@ -41,6 +41,10 @@ chan getServicesStatus,
      analysis,
      planning,
      execute,
+     selectLabWithStrategy,
+     selectAlarmWithStrategy,
+     selectDrugWithStrategy,
+     launchWorkflow,
      updateFailureRate;
  
 int  currentFailure,

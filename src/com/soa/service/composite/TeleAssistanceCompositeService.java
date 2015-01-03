@@ -16,9 +16,13 @@ import com.soa.qos.PerformanceQoS;
 import com.soa.qos.ReliabilityQoS;
 import com.webapp.server.WorkflowServiceImpl;
 
+import service.auxiliary.CompositeServiceConfiguration;
 import service.auxiliary.LocalOperation;
 import service.composite.CompositeService;
 
+@CompositeServiceConfiguration(
+	SDCacheMode=true
+)
 public class TeleAssistanceCompositeService extends CompositeService {
 
 	private String pathToWorkflow;
@@ -38,7 +42,7 @@ public class TeleAssistanceCompositeService extends CompositeService {
 		compositeService.start();
 
 		try {
-			ActivFORMSEngine engine = new ActivFORMSEngine("adapation", args[1], 9000);
+			ActivFORMSEngine engine = new ActivFORMSEngine("adaptation", args[1], 9000);
 			engine.setRealTimeUnit(1000);
 
 			TeleAssistanceProbe probe = new TeleAssistanceProbe(engine, compositeService);
@@ -46,12 +50,11 @@ public class TeleAssistanceCompositeService extends CompositeService {
 			
 			//Decision tree
 			GoalManager goalManager = engine.getGoalManager();
-			goalManager.addModelFromFile("adaptation", args[1]);
 			goalManager.addModelFromFile("correction", args[2]);
 			
 			Goal topGoal = new Goal("Top Goal", "");
-			topGoal.addSubGoal(new Goal("adaptation", "correctModel == false"));
-			topGoal.addSubGoal(new Goal("correction", "correctModel == true"));
+			topGoal.addSubGoal(new Goal("adaptation", "correctModel == false", "adaptation"));
+			topGoal.addSubGoal(new Goal("correction", "correctModel == true", "correction"));
 
 			goalManager.addGoal(topGoal);
 			//---------------------------

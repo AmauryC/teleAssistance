@@ -9,7 +9,7 @@ const int 	NB_SERVICES = 3,
 // Constant to distinguish services
 const int	ALARM_SERVICE = 1, LAB_SERVICE = 0, DRUG_SERVICE = 2;
 
-const int FAILURE_THRESHOLD = 3;
+const int FAILURE_THRESHOLD = 20;
 
 // ############################
 // ##### MANAGING SYSTEM #######
@@ -44,7 +44,8 @@ chan getServicesStatus,
      selectLabWithStrategy,
      selectAlarmWithStrategy,
      selectDrugWithStrategy,
-     launchWorkflow;
+     launchWorkflow,
+     updateFailureRate;
  
 int  currentFailure,
      currentTask,
@@ -295,6 +296,9 @@ const int WAIT_TIME = 4;
 void updateKnowledge(){
     int j;
 
+    // FIX
+    observedFailure = failureRate;
+
     k.failure = currentFailure;
     k.serviceFailed = currentServiceFailed;
     k.pickedTask = currentTask;
@@ -312,7 +316,6 @@ void updateKnowledge(){
 	    qosDrug[j][2] = k.failureRate.drug[j];
 	}
 
-	firstRun = false;
 	normalized = false;
     }
 }
@@ -321,26 +324,30 @@ void analyze(){
     int j, sub;
     adaptationNeeded = k.failure;
     
-    for(j = 0; j &lt; NB_ALARM; j++) {
-        sub = k.failureRate.alarms[j] - qosAlarm[j][2];
-        if(sub &lt; 0) sub = (-1)*sub;
-
-	if(sub &gt;= FAILURE_THRESHOLD)
-	    correctModel = true;
-    }
-    for(j = 0; j &lt; NB_LAB; j++) {
-        sub = k.failureRate.labs[j] - qosLab[j][2];
-        if(sub &lt; 0) sub = (-1)*sub;
-
-	if(sub &gt;= FAILURE_THRESHOLD)
-	    correctModel = true;
-    }
-    for(j = 0; j &lt; NB_DRUG; j++) {
-        sub = k.failureRate.drug[j] - qosDrug[j][2];
-        if(sub &lt; 0) sub = (-1)*sub;
-
-	if(sub &gt;= FAILURE_THRESHOLD)
-	    correctModel = true;
+    if(!firstRun) {
+	    for(j = 0; j &lt; NB_ALARM; j++) {
+        	sub = k.failureRate.alarms[j] - qosAlarm[j][2];
+	        if(sub &lt; 0) sub = (-1)*sub;
+	
+		if(sub &gt;= FAILURE_THRESHOLD)
+		    correctModel = true;
+	    }
+	    for(j = 0; j &lt; NB_LAB; j++) {
+	        sub = k.failureRate.labs[j] - qosLab[j][2];
+	        if(sub &lt; 0) sub = (-1)*sub;
+	
+			if(sub &gt;= FAILURE_THRESHOLD)
+		    correctModel = true;
+	    }
+	    for(j = 0; j &lt; NB_DRUG; j++) {
+        	sub = k.failureRate.drug[j] - qosDrug[j][2];
+		        if(sub &lt; 0) sub = (-1)*sub;
+	
+		if(sub &gt;= FAILURE_THRESHOLD)
+		    correctModel = true;
+	    }
+    } else {
+	firstRun = false;
     }
 }</declaration><location id="id33" x="-136" y="68"><name x="-212" y="8">NoAdaptationNeeded</name><committed/></location><location id="id34" x="-136" y="-68"><name x="-204" y="-136">AdaptationNeeded</name><committed/></location><location id="id35" x="-340" y="0"><name x="-391" y="-136">CheckAdaptation</name><committed/></location><location id="id36" x="-136" y="136"><name x="-178" y="102">StartAnalysis</name><committed/></location><location id="id37" x="68" y="0" color="#00ff00"><name x="59" y="-136">Waiting</name></location><init ref="id37"/><transition><source ref="id33"/><target ref="id37"/><nail x="68" y="68"/></transition><transition><source ref="id34"/><target ref="id37"/><label kind="synchronisation" x="-51" y="-93">planning!</label><nail x="68" y="-68"/></transition><transition><source ref="id35"/><target ref="id33"/><label kind="guard" x="-323" y="42">!adaptationNeeded</label><nail x="-340" y="68"/></transition><transition><source ref="id35"/><target ref="id34"/><label kind="guard" x="-323" y="-93">adaptationNeeded</label><nail x="-340" y="-68"/></transition><transition><source ref="id36"/><target ref="id35"/><label kind="assignment" x="-323" y="110">analyze()</label><nail x="-408" y="136"/><nail x="-408" y="0"/></transition><transition><source ref="id37"/><target ref="id36"/><label kind="synchronisation" x="-34" y="110">analysis?</label><nail x="136" y="0"/><nail x="136" y="136"/></transition></template><template><name>Planner</name><declaration>int serviceType;
 
