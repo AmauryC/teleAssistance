@@ -69,7 +69,7 @@ public class TeleAssistance implements EntryPoint {
 	}-*/;
 
 	public static native void printFailureRate(JsArrayString jsArrayString)/*-{
-		$wnd.app.printDecision(jsArrayString);
+		$wnd.app.printFailureRate(jsArrayString);
 	}-*/;
 
 	public static native void printAlarm()/*-{

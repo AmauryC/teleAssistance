@@ -80,7 +80,7 @@ public class TeleAssistanceEffector extends Synchronizer{
 			}
 			
 			String[] textualRates = new String[9];
-			for(int i=0;i<10;i++){
+			for(int i=0;i<9;i++){
 				textualRates[i] = ""+failureRates[i];
 			}
 			impl.updateClientUI(textualRates, State.UPDATE_FAILURE_STATS);
