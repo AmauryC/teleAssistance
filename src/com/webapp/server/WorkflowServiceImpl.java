@@ -162,4 +162,13 @@ WorkflowService, ServerMessageGeneratorService {
 	public AbstractService[] getServices(){
 		return this.services;
 	}
+	
+	public void printRates(){
+		for(int i=1; i<10; i++){
+			double rate = (double)services[i].getServiceDescription().getCustomProperties().get("Reliability");
+			String name = (String)services[i].getServiceDescription().getServiceEndpoint();
+			
+			System.out.println(name+" : "+rate+" % of failure");
+		}
+	}
 }

@@ -84,6 +84,7 @@ public class TeleAssistanceEffector extends Synchronizer{
 				textualRates[i] = ""+failureRates[i];
 			}
 			impl.updateClientUI(textualRates, State.UPDATE_FAILURE_STATS);
+			impl.printRates();
 		}
 		
 		if(channelId == labChannelId || channelId == alarmChannelId || channelId == drugChannelId){
