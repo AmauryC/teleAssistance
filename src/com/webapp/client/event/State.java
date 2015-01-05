@@ -14,4 +14,6 @@ public class State {
 	public static final int SEND_ALARM = 3;
 	public static final int PRE_ANALYZE_DATA = 4;
 	public static final int POST_ANALYZE_DATA = 5;
+	
+	public static final int UPDATE_FAILURE_STATS = 6;
 }

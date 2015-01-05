@@ -30,28 +30,28 @@ public class TeleAssistance implements EntryPoint {
 	 */
 	private final static WorkflowServiceAsync workflowService = GWT
 			.create(WorkflowService.class);	
-	
+
 
 	public static native void workflowStarted()/*-{
 		$wnd.app.workflowStarted();
 	}-*/;
-	
+
 	public static native void workflowEnded()/*-{
 		$wnd.app.workflowEnded();
 	}-*/;
-	
+
 	public static native void serviceInvoked(JsArrayString description)/*-{
 		$wnd.app.serviceInvoked(description);
 	}-*/;
-	
+
 	public static native void serviceSuccessful(JsArrayString description)/*-{
 		$wnd.app.serviceSuccessful(description);
 	}-*/;
-	
+
 	public static native void serviceTimeout(JsArrayString description)/*-{
 		$wnd.app.serviceTimeout(description);
 	}-*/;
-	
+
 	public static native void printHealthData(JsArrayString data)/*-{
 		$wnd.app.printHealthData(data);
 	}-*/;
@@ -68,10 +68,14 @@ public class TeleAssistance implements EntryPoint {
 		$wnd.app.printDecision(jsArrayString);
 	}-*/;
 
+	public static native void printFailureRate(JsArrayString jsArrayString)/*-{
+		$wnd.app.printDecision(jsArrayString);
+	}-*/;
+
 	public static native void printAlarm()/*-{
 		$wnd.app.printAlarm();
 	}-*/;
-	
+
 	/**
 	 * This is the entry point method.
 	 */
@@ -83,49 +87,52 @@ public class TeleAssistance implements EntryPoint {
 		// add a listener to the SERVER_MESSAGE_DOMAIN
 		theRemoteEventService.addListener(UpdateUIEvent.SERVER_MESSAGE_DOMAIN,
 				new RemoteEventListener() {
-					public void apply(Event anEvent) {
-						if (anEvent instanceof UpdateUIEvent) {
-							UpdateUIEvent event = (UpdateUIEvent) anEvent;
-							int state = ((UpdateUIEvent) anEvent).getState();
+			public void apply(Event anEvent) {
+				if (anEvent instanceof UpdateUIEvent) {
+					UpdateUIEvent event = (UpdateUIEvent) anEvent;
+					int state = ((UpdateUIEvent) anEvent).getState();
 
-							String[] tab = event.getGeneratedObject();
-							JsArrayString jsArrayString = arrayToJsArray(tab);
+					String[] tab = event.getGeneratedObject();
+					JsArrayString jsArrayString = arrayToJsArray(tab);
 
-							switch (state) {
-							case State.WORKFLOW_STARTED:
-								workflowStarted();
-								break;
-							case State.WORKFLOW_ENDED:
-								workflowEnded();
-								break;
-							case State.SERVICE_INVOKED:
-								serviceInvoked(jsArrayString);
-								break;
-							case State.SERVICE_SUCCESSFUL:
-								serviceSuccessful(jsArrayString);
-								break;
-							case State.SERVICE_TIMEOUT:
-								serviceTimeout(jsArrayString);
+					switch (state) {
+					case State.WORKFLOW_STARTED:
+						workflowStarted();
+						break;
+					case State.WORKFLOW_ENDED:
+						workflowEnded();
+						break;
+					case State.SERVICE_INVOKED:
+						serviceInvoked(jsArrayString);
+						break;
+					case State.SERVICE_SUCCESSFUL:
+						serviceSuccessful(jsArrayString);
+						break;
+					case State.SERVICE_TIMEOUT:
+						serviceTimeout(jsArrayString);
 
-							case State.CHANGE_DOSES:
-								printDrugData(jsArrayString);
-								break;
-							case State.CHANGE_DRUG:
-								printDrugData(jsArrayString);
-								break;
-							case State.PRE_ANALYZE_DATA:
-								printHealthData(jsArrayString);
-								break;
-							case State.POST_ANALYZE_DATA:
-								printDecision(jsArrayString);
-								break;
-							case State.SEND_ALARM:
-								printAlarm();
-								break;
-							}
-						}
+					case State.CHANGE_DOSES:
+						printDrugData(jsArrayString);
+						break;
+					case State.CHANGE_DRUG:
+						printDrugData(jsArrayString);
+						break;
+					case State.PRE_ANALYZE_DATA:
+						printHealthData(jsArrayString);
+						break;
+					case State.POST_ANALYZE_DATA:
+						printDecision(jsArrayString);
+						break;
+					case State.SEND_ALARM:
+						printAlarm();
+						break;
+					case State.UPDATE_FAILURE_STATS:
+						printFailureRate(jsArrayString);
+						break;
 					}
-				});
+				}
+			}
+		});
 
 		workflowService.initialize(callback);
 	}
@@ -150,7 +157,7 @@ public class TeleAssistance implements EntryPoint {
 	public static void launchWorkflow(int waitingTime) {
 		workflowService.createClient(waitingTime, clientCallback);
 	}
-	
+
 	public static void isWorkflowStarted() {
 		workflowService.isWorkflowStarted(workflowCallback);
 	}
@@ -165,7 +172,7 @@ public class TeleAssistance implements EntryPoint {
 
 		@Override
 		public void onSuccess(String result) {
-			
+
 		}
 
 	};
@@ -184,7 +191,7 @@ public class TeleAssistance implements EntryPoint {
 		}
 
 	};
-	
+
 	static AsyncCallback<Boolean> pickTaskCallback = new AsyncCallback<Boolean>() {
 
 		@Override
@@ -199,7 +206,7 @@ public class TeleAssistance implements EntryPoint {
 		}
 
 	};
-	
+
 	static AsyncCallback<Boolean> workflowCallback = new AsyncCallback<Boolean>() {
 
 		@Override

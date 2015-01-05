@@ -9,6 +9,7 @@ import service.provider.AbstractService;
 
 import com.soa.object.AnalysisResult;
 import com.soa.service.composite.TeleAssistanceCompositeService;
+import com.webapp.client.event.State;
 import com.webapp.server.WorkflowServiceImpl;
 
 import activforms.engine.ActivFORMSEngine;
@@ -77,6 +78,12 @@ public class TeleAssistanceEffector extends Synchronizer{
 					effector.updateServiceDescription(oldDescription, newDescription, op.getOpName());
 				}	
 			}
+			
+			String[] textualRates = new String[9];
+			for(int i=0;i<10;i++){
+				textualRates[i] = ""+failureRates[i];
+			}
+			impl.updateClientUI(textualRates, State.UPDATE_FAILURE_STATS);
 		}
 		
 		if(channelId == labChannelId || channelId == alarmChannelId || channelId == drugChannelId){
