@@ -278,7 +278,7 @@ App.prototype.printFailureRate = function(data) {
 	for(var i = 0; i < data.length; i++) {
 		data[i] = parseFloat(data[i]);
 	}
-	data.unshift('' + this.currentIdx)
+	data.unshift('' + (this.runs.reduce(function(a,b) { return a+b; })));
 	this.ratesChart.data.addRow(data);
 	this.ratesChart.chart.draw(this.ratesChart.data, this.ratesChart.options);
 };

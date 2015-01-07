@@ -54,17 +54,17 @@ public class TeleAssistanceEffector extends Synchronizer{
 			
 			int DIVISION = 10000;
 			double[] failureRates = new double[9];
-			failureRates[0] = (int)arg1.get("failureRate.labs[0]")/DIVISION;
-			failureRates[1] = (int)arg1.get("failureRate.labs[1]")/DIVISION;
-			failureRates[2] = (int)arg1.get("failureRate.labs[2]")/DIVISION;
-			failureRates[3] = (int)arg1.get("failureRate.labs[3]")/DIVISION;
-			failureRates[4] = (int)arg1.get("failureRate.labs[4]")/DIVISION;
+			failureRates[0] = (double)((int)arg1.get("failureRate.labs[0]"))/DIVISION;
+			failureRates[1] = (double)((int)arg1.get("failureRate.labs[1]"))/DIVISION;
+			failureRates[2] = (double)((int)arg1.get("failureRate.labs[2]"))/DIVISION;
+			failureRates[3] = (double)((int)arg1.get("failureRate.labs[3]"))/DIVISION;
+			failureRates[4] = (double)((int)arg1.get("failureRate.labs[4]"))/DIVISION;
 			
-			failureRates[5] = (int)arg1.get("failureRate.alarms[0]")/DIVISION;
-			failureRates[6] = (int)arg1.get("failureRate.alarms[1]")/DIVISION;
-			failureRates[7] = (int)arg1.get("failureRate.alarms[2]")/DIVISION;
+			failureRates[5] = (double)((int)arg1.get("failureRate.alarms[0]"))/DIVISION;
+			failureRates[6] = (double)((int)arg1.get("failureRate.alarms[1]"))/DIVISION;
+			failureRates[7] = (double)((int)arg1.get("failureRate.alarms[2]"))/DIVISION;
 			
-			failureRates[8] = (int)arg1.get("failureRate.drug[0]")/DIVISION;
+			failureRates[8] = (double)((int)arg1.get("failureRate.drug[0]"))/DIVISION;
 			
 			AbstractService[] services = impl.getServices();
 			Effector effector = new Effector(this.composite);

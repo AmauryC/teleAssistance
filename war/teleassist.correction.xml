@@ -303,7 +303,7 @@ failureRate = observedFailure</label><nail x="68" y="-68"/><nail x="-272" y="-68
 	normalized = false;
 	// We switch back to the adaptation model
 	correctModel = false;	
-}</declaration><location id="id21" x="384" y="136"><name x="352" y="152">ActionTaken</name><committed/></location><location id="id22" x="0" y="-104"><name x="-34" y="-155">CorrectionofFailureRates</name><committed/></location><location id="id23" x="-238" y="0"><name x="-280" y="-178">Waiting</name></location><init ref="id23"/><transition><source ref="id22"/><target ref="id21"/><label kind="assignment" x="240" y="-96">updateFailureRates()</label><nail x="384" y="-104"/></transition><transition><source ref="id21"/><target ref="id23"/><nail x="-272" y="136"/><nail x="-272" y="34"/></transition><transition><source ref="id23"/><target ref="id22"/><label kind="synchronisation" x="-200" y="-128">updateFailureRate?</label><nail x="-240" y="-104"/></transition></template><template><name>Monitor</name><declaration>clock x;
+}</declaration><location id="id21" x="384" y="136"><name x="352" y="152">ActionTaken</name><committed/></location><location id="id22" x="0" y="-104"><name x="-34" y="-155">CorrectionofFailureRates</name><committed/></location><location id="id23" x="-238" y="0"><name x="-280" y="-178">EffectorWaiting</name></location><init ref="id23"/><transition><source ref="id22"/><target ref="id21"/><label kind="assignment" x="240" y="-96">updateFailureRates()</label><nail x="384" y="-104"/></transition><transition><source ref="id21"/><target ref="id23"/><nail x="-272" y="136"/><nail x="-272" y="34"/></transition><transition><source ref="id23"/><target ref="id22"/><label kind="synchronisation" x="-200" y="-128">updateFailureRate?</label><nail x="-240" y="-104"/></transition></template><template><name>Monitor</name><declaration>clock x;
 const int WAIT_TIME = 4;
 
 void updateKnowledge(){
@@ -330,7 +330,7 @@ void updateKnowledge(){
 	normalized = false;
     }
 }
-</declaration><location id="id24" x="-306" y="34"><name x="-348" y="-76">AnalysisRequired</name><committed/></location><location id="id25" x="-136" y="34"><name x="-187" y="-76">StartAnalysis</name><committed/></location><location id="id26" x="-442" y="34"><name x="-518" y="-76">RequestServicesStatus</name><committed/></location><location id="id27" x="-578" y="34"><name x="-603" y="-76">Waiting</name><label kind="invariant" x="-696" y="0">x &lt;= WAIT_TIME</label></location><init ref="id27"/><transition><source ref="id26"/><target ref="id24"/><label kind="synchronisation" x="-425" y="8">setServicesStatus?</label></transition><transition><source ref="id27"/><target ref="id26"/><label kind="guard" x="-561" y="-17">x == WAIT_TIME</label><label kind="synchronisation" x="-561" y="0">getServicesStatus!</label><label kind="assignment" x="-560" y="16">x = 0</label></transition><transition><source ref="id25"/><target ref="id27"/><nail x="-136" y="136"/><nail x="-578" y="136"/></transition><transition><source ref="id24"/><target ref="id25"/><label kind="synchronisation" x="-289" y="-8">analysis!</label><label kind="assignment" x="-289" y="8">updateKnowledge()</label></transition></template><template><name>Analyzer</name><declaration>bool adaptationNeeded;
+</declaration><location id="id24" x="-306" y="34"><name x="-348" y="-76">AnalysisRequired</name><committed/></location><location id="id25" x="-136" y="34"><name x="-187" y="-76">StartAnalysis</name><committed/></location><location id="id26" x="-442" y="34"><name x="-518" y="-76">RequestServicesStatus</name><committed/></location><location id="id27" x="-578" y="34"><name x="-632" y="-72">MonitorWaiting</name><label kind="invariant" x="-696" y="0">x &lt;= WAIT_TIME</label></location><init ref="id27"/><transition><source ref="id26"/><target ref="id24"/><label kind="synchronisation" x="-425" y="8">setServicesStatus?</label></transition><transition><source ref="id27"/><target ref="id26"/><label kind="guard" x="-561" y="-17">x == WAIT_TIME</label><label kind="synchronisation" x="-561" y="0">getServicesStatus!</label><label kind="assignment" x="-560" y="16">x = 0</label></transition><transition><source ref="id25"/><target ref="id27"/><nail x="-136" y="136"/><nail x="-578" y="136"/></transition><transition><source ref="id24"/><target ref="id25"/><label kind="synchronisation" x="-289" y="-8">analysis!</label><label kind="assignment" x="-289" y="8">updateKnowledge()</label></transition></template><template><name>Analyzer</name><declaration>bool adaptationNeeded;
 void analyze(){
     // If this model is called, we need an "adaptation" ~&gt; correction
     adaptationNeeded = true;
@@ -374,8 +374,6 @@ system 	ta,
 	alarm2,
 	alarm3,
 	drug,
-probe,
-effector,
 monitor,
 analyzer,
 planner,

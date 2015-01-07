@@ -408,6 +408,8 @@ executor = Executor();
 
 
 // List one or more processes to be composed into a system.
+
+// No instanciation of probe and effector
 system 	ta,
 	user,
 	lab1,
@@ -419,8 +421,6 @@ system 	ta,
 	alarm2,
 	alarm3,
 	drug,
-probe,
-effector,
 monitor,
 analyzer,
 planner,
