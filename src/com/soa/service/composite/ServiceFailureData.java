@@ -20,10 +20,11 @@ public class ServiceFailureData {
 		return stats.get(service);
 	}
 
+	
 	/**
 	 * Update the failure rate of the service
 	 * @param service : the name of the service
-	 * @param failed : wether the invokation failed or not
+	 * @param failed : whether the invokation failed or not
 	 */
 	public static void updateStats(String service, boolean failed){
 		

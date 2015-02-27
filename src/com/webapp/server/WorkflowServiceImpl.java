@@ -159,8 +159,26 @@ WorkflowService, ServerMessageGeneratorService {
 		this.createClient(1000);
 	}
 	
-	public AbstractService[] getServices(){
-		return this.services;
+	public AbstractService[] getAlarmServices(){
+		AbstractService[] labServices = new AbstractService[5];
+		for(int i=0; i<3;i++){
+			labServices[i] = services[i+5];
+		}
+		return labServices;
+	}
+	
+	public AbstractService[] getDrugServices(){
+		AbstractService[] drugServices = new AbstractService[1];
+		drugServices[0] = this.services[9];
+		return drugServices;
+	}
+	
+	public AbstractService[] getLabServices(){
+		AbstractService[] labServices = new AbstractService[5];
+		for(int i=0; i<5;i++){
+			labServices[i] = services[i+1];
+		}
+		return labServices;
 	}
 	
 	public void printRates(){

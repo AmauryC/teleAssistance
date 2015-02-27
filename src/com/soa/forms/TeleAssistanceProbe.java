@@ -5,6 +5,8 @@ import java.util.HashMap;
 import com.soa.object.Drug;
 import com.soa.service.composite.ServiceFailureData;
 import com.soa.service.composite.TeleAssistanceCompositeService;
+import com.sun.corba.se.spi.orbutil.threadpool.Work;
+import com.webapp.server.WorkflowServiceImpl;
 
 import activforms.engine.ActivFORMSEngine;
 import activforms.engine.Synchronizer;
@@ -14,10 +16,12 @@ public class TeleAssistanceProbe extends Synchronizer{
 	private ActivFORMSEngine engine;
 	private int getServiceStatusChannelId, setServiceStatusChannelId;
 	private TeleAssistanceCompositeService composite;
+	private WorkflowServiceImpl impl;
 
-	public TeleAssistanceProbe(ActivFORMSEngine engine, TeleAssistanceCompositeService composite) {
+	public TeleAssistanceProbe(ActivFORMSEngine engine, TeleAssistanceCompositeService composite, WorkflowServiceImpl impl) {
 		this.engine = engine;
 		this.composite = composite;
+		this.impl = impl;
 		this.getServiceStatusChannelId = engine.getChannelId("getServicesStatus");
 		this.setServiceStatusChannelId = engine.getChannelId("setServicesStatus");
 
@@ -53,7 +57,18 @@ public class TeleAssistanceProbe extends Synchronizer{
 					"failureRate.labs[2]="+failureRate[5],
 					"failureRate.labs[3]="+failureRate[6],
 					"failureRate.labs[4]="+failureRate[7],
-					"failureRate.drug[0]="+failureRate[8]
+					"failureRate.drug[0]="+failureRate[8],
+					"cachedRate.alarms[0]="+impl.getAlarmServices()[0].getServiceDescription().getCustomProperties().get("Reliability"),
+					"cachedRate.alarms[1]="+impl.getAlarmServices()[1].getServiceDescription().getCustomProperties().get("Reliability"),
+					"cachedRate.alarms[2]="+impl.getAlarmServices()[2].getServiceDescription().getCustomProperties().get("Reliability"),
+					"cachedRate.labs[0]="+impl.getLabServices()[0].getServiceDescription().getCustomProperties().get("Reliability"),
+					"cachedRate.labs[1]="+impl.getLabServices()[1].getServiceDescription().getCustomProperties().get("Reliability"),
+					"cachedRate.labs[2]="+impl.getLabServices()[2].getServiceDescription().getCustomProperties().get("Reliability"),
+					"cachedRate.labs[3]="+impl.getLabServices()[3].getServiceDescription().getCustomProperties().get("Reliability"),
+					"cachedRate.labs[4]="+impl.getLabServices()[4].getServiceDescription().getCustomProperties().get("Reliability"),
+					"cachedRate.drug[0]="+impl.getDrugServices()[0].getServiceDescription().getCustomProperties().get("Reliability")
+					
+					
 					);
 		}
 	}
