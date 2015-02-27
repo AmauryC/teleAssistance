@@ -55,9 +55,11 @@ public class TeleAssistanceEffector extends Synchronizer{
 
 			
 			double[] failureRates = new double[9];
+
 			int id = ((int)arg1.get("k.serviceToUpdate.id"));
 
 			AbstractService[] services = impl.getAlarmServices();
+
 			Effector effector = new Effector(this.composite);
 			ServiceDescription oldDescription, newDescription;
 

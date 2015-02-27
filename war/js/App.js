@@ -34,6 +34,12 @@ function App() {
 			data: null,
 			options: null
 	};
+	this.ratesChart = {
+		divId: "failure_rates_chart",
+		chart: null,
+		data: null,
+		options: null
+	};
 }
 
 App.prototype.start = function() {
@@ -83,8 +89,28 @@ App.prototype.drawChart = function() {
 		//c.chart.draw(c.data, c.options);
 	}
 
+	// Failure rate charts
+	this.ratesChart.chart = new google.visualization.LineChart(document.getElementById(this.ratesChart.divId));
+	this.ratesChart.data = new google.visualization.DataTable();
+	this.ratesChart.data.addColumn('string', '');
+	this.ratesChart.data.addColumn('number', 'Alarm 1');
+	this.ratesChart.data.addColumn('number', 'Alarm 2');
+	this.ratesChart.data.addColumn('number', 'Alarm 3');
+	this.ratesChart.data.addColumn('number', 'Lab 1');
+	this.ratesChart.data.addColumn('number', 'Lab 2');
+	this.ratesChart.data.addColumn('number', 'Lab 3');
+	this.ratesChart.data.addColumn('number', 'Lab 4');
+	this.ratesChart.data.addColumn('number', 'Lab 5');
+	this.ratesChart.data.addColumn('number', 'Drug 1');
+	this.ratesChart.options = {
+			title: 'Failure rates chart',
+			vAxis: {
+				title: 'Percentage of failure'
+			}
+	};
+
 	//HealthChart
-	this.healthChart.chart = new google.visualization.LineChart(document.getElementById("bpm-chart"));
+	this.healthChart.chart = new google.visualization.LineChart(document.getElementById(this.healthChart.divId));
 	this.healthChart.data = new google.visualization.DataTable();
 	this.healthChart.data.addColumn('string', 'BPM');
 	this.healthChart.data.addColumn('number', 'BPM');
@@ -244,4 +270,15 @@ App.prototype.pickTask = function(choice){
 
 App.prototype.reconnect = function() {
 	isWorkflowStarted();
+};
+
+App.prototype.printFailureRate = function(data) {
+	console.log(data);
+	console.log(this.ratesChart);
+	for(var i = 0; i < data.length; i++) {
+		data[i] = parseFloat(data[i]);
+	}
+	data.unshift('' + (this.runs.reduce(function(a,b) { return a+b; })));
+	this.ratesChart.data.addRow(data);
+	this.ratesChart.chart.draw(this.ratesChart.data, this.ratesChart.options);
 };
